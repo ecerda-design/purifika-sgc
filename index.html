@@ -547,6 +547,10 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18"/><path d="M8 2v4M16 2v4"/><circle cx="16" cy="15" r="2"/><path d="m17.5 16.5 1.5 1.5"/></svg>
           Calendario de Auditorías
         </button>
+        <button data-view="auditlog" id="navAuditLog" style="display:none;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/></svg>
+          Auditoría del Sistema
+        </button>
         <div id="calidadTabsContainer"></div>
         <div class="sidebar-group-label">Documentación</div>
         <button data-view="procedimientos">
@@ -840,6 +844,17 @@
           <div class="ind-grid" id="miCalidadGrid"></div>
         </div>
 
+        <!-- ===================== AUDITORÍA DEL SISTEMA ===================== -->
+        <div class="view" id="view-auditlog">
+          <h2 class="view-title">Auditoría del Sistema</h2>
+          <p class="view-sub">Registro de quién hizo cada cambio en el sistema (check lists, no conformidades, archivos subidos). Visible solo para Administrador y Coordinadora del SGC.</p>
+          <div class="panel" style="margin-bottom:16px;">
+            <button class="btn btn-primary" id="auditLogRefresh">Actualizar</button>
+            <span id="auditLogStatus" style="margin-left:12px;font-size:12px;color:var(--ink-soft);"></span>
+          </div>
+          <div id="auditLogTableWrap"></div>
+        </div>
+
       </main>
     </div>
   </div>
@@ -971,6 +986,7 @@
     const roleLabelMap = {admin:"Administrador", coordinador_sgc:"Coord. SGC", calidad:"Calidad", franquicia:"Franquicia"};
     document.getElementById("sessionRoleTag").textContent = roleLabelMap[user.rol] || user.rol;
     document.getElementById("adminFranqSwitch").classList.toggle("show", user.rol === "admin");
+    document.getElementById("navAuditLog").style.display = (user.rol === "admin" || user.rol === "coordinador_sgc") ? "" : "none";
     renderCalidadTabs_();
     goto("inicio");
     resetInactivityTimer_();
@@ -1436,6 +1452,34 @@
   document.getElementById("audFiltroTipo").addEventListener("change", renderAuditorias);
   document.getElementById("audFiltroEstatus").addEventListener("change", renderAuditorias);
 
+  function renderAuditLog(){
+    const wrap = document.getElementById("auditLogTableWrap");
+    const status = document.getElementById("auditLogStatus");
+    status.textContent = "Cargando...";
+    apiGet("auditoria").then(res => {
+      if(!res || !res.ok){
+        status.textContent = "No se pudo cargar: " + ((res && res.error) || "error desconocido");
+        wrap.innerHTML = "";
+        return;
+      }
+      status.textContent = res.registros.length + " registro(s) más reciente(s) primero.";
+      if(!res.registros.length){
+        wrap.innerHTML = "<p style=\"font-size:12.5px;color:var(--ink-soft);\">Aún no hay movimientos registrados.</p>";
+        return;
+      }
+      const rows = res.registros.map(r => {
+        let detalleTxt = r.detalle;
+        try{ const obj = JSON.parse(r.detalle); detalleTxt = Object.keys(obj).map(k => k + ": " + obj[k]).join(" · "); }catch(e){}
+        const fecha = r.timestamp ? new Date(r.timestamp).toLocaleString("es-MX") : "";
+        return "<tr><td>" + esc(fecha) + "</td><td>" + esc(r.usuario) + "</td><td>" + esc(r.nombre) + "</td><td>" + esc(r.rol) + "</td><td><b>" + esc(r.accion) + "</b></td><td style=\"max-width:420px;\">" + esc(detalleTxt) + "</td></tr>";
+      }).join("");
+      wrap.innerHTML = "<div class=\"nc-table-wrap\"><table class=\"nc-table\"><thead><tr><th>Fecha</th><th>Usuario</th><th>Nombre</th><th>Rol</th><th>Acción</th><th>Detalle</th></tr></thead><tbody>" + rows + "</tbody></table></div>";
+    }).catch(err => {
+      status.textContent = "Error de conexión: " + err.message;
+    });
+  }
+  document.getElementById("auditLogRefresh").addEventListener("click", renderAuditLog);
+
   function auditoriasFiltradas_(){
     const fTipo = document.getElementById("audFiltroTipo").value, fEstatus = document.getElementById("audFiltroEstatus").value;
     return AUDITORIAS_EJEMPLO.filter(a =>
@@ -1670,7 +1714,8 @@
   const breadcrumbCurrent = document.getElementById("breadcrumbCurrent");
   const labels = {inicio:"Inicio", diario:"Check List Diario", semanal:"Check List Semanal", mensual:"Check List Mensual",
     noconformidades:"No Conformidades", subirreporte:"Subir Reporte", procedimientos:"Biblioteca del SGC", reportes:"Reportes",
-    indicadores:"Indicadores del SGC", auditorias:"Calendario de Auditorías", micalidad:"Mi módulo de Calidad"};
+    indicadores:"Indicadores del SGC", auditorias:"Calendario de Auditorías", micalidad:"Mi módulo de Calidad",
+    auditlog:"Auditoría del Sistema"};
 
   function goto(view, extra){
     views.forEach(v => v.classList.toggle("active", v.id === "view-" + view));
@@ -1683,6 +1728,7 @@
     if(view === "indicadores") renderIndicadores();
     if(view === "auditorias") renderAuditorias();
     if(view === "micalidad") renderMiCalidad(extra);
+    if(view === "auditlog") renderAuditLog();
   }
   navTabsEl.addEventListener("click", (e) => {
     const btn = e.target.closest("button[data-view]");
