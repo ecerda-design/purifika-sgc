@@ -36,19 +36,58 @@
     display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.15s;margin-left:auto;}
   .sidebar-toggle-btn:hover{background:var(--cyan-dark);}
   .sidebar-toggle-btn svg{width:16px;height:16px;}
-  .topbar-content-zone{flex:1;display:flex;align-items:center;justify-content:flex-end;padding:0 22px;min-width:0;gap:16px;}
-  .topbar-badge{display:flex;align-items:center;gap:6px;color:#CCE9EB;font-size:11px;font-weight:600;}
-  .topbar-badge .dot{width:7px;height:7px;border-radius:50%;background:var(--ok);}
-  .topbar-title{color:#CCCCCC;font-size:12px;font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .topbar-content-zone{flex:1;display:flex;align-items:center;justify-content:flex-end;padding:0 14px;min-width:0;gap:12px;overflow:hidden;}
+  .topbar-badge{display:flex;align-items:center;gap:6px;color:#CCE9EB;font-size:11px;font-weight:600;flex:none;white-space:nowrap;}
+  .topbar-badge .dot{width:7px;height:7px;border-radius:50%;background:var(--ok);flex:none;}
+  .topbar-badge-text{white-space:nowrap;}
+  .topbar-title{color:#CCCCCC;font-size:12px;font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:0 1 auto;min-width:0;}
+  /* Franja intermedia: en vez de un solo corte binario a 760px, vamos degradando
+     progresivamente lo menos importante primero para que nada se encime nunca. */
+  @media(max-width:1180px){
+    .topbar-title{display:none;}
+  }
+  @media(max-width:980px){
+    .topbar-badge-text{display:none;}
+    .topbar-badge{gap:0;}
+  }
+  @media(max-width:900px){
+    .admin-franq-switch label{display:none;}
+    .admin-franq-switch select{max-width:104px;}
+  }
+  @media(max-width:800px){
+    .topbar-badge{display:none;}
+  }
   @media(max-width:760px){
     .topbar-brand-zone{width:auto;flex:1;}
     .topbar-content-zone{display:none;}
   }
+  .admin-franq-switch select{min-width:0;flex:0 1 auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .admin-franq-switch{min-width:0;flex:0 1 auto;}
+  .session-chip{flex:none;}
 
   .app-body{position:relative;margin-top:var(--header-h);}
   .sidebar{width:var(--sidebar-w);background:var(--cyan);padding:0 0 20px;overflow-y:auto;
     position:fixed;top:var(--header-h);left:0;bottom:0;z-index:90;transition:left .18s ease;}
   .app-shell.sidebar-collapsed .sidebar{left:calc(-1 * var(--sidebar-w));}
+  /* ---------- Mobile: el sidebar pasa a ser un cajón (drawer) flotante,
+     no un panel que empuja el contenido. Ver JS: se autocolapsa al cargar
+     y al elegir una vista, y hay backdrop para cerrarlo tocando fuera. ---------- */
+  @media(max-width:760px){
+    .sidebar{z-index:150;box-shadow:0 6px 24px rgba(0,0,0,.28);}
+    .content-col{margin-left:0 !important;}
+    .sidebar-backdrop{display:none;position:fixed;top:var(--header-h);left:0;right:0;bottom:0;
+      background:rgba(20,26,32,.45);z-index:140;}
+    .app-shell:not(.sidebar-collapsed) .sidebar-backdrop{display:block;}
+    .sidebar-mobile-panel{display:flex;}
+  }
+  .sidebar-mobile-panel{display:none;flex-direction:column;gap:10px;padding:14px 17px 16px;
+    background:rgba(0,0,0,.12);border-bottom:1px solid rgba(255,255,255,.18);margin-bottom:6px;}
+  .sidebar-mobile-panel .admin-franq-switch{display:none;flex-direction:column;align-items:flex-start;gap:6px;}
+  .sidebar-mobile-panel .admin-franq-switch.show{display:flex;}
+  .sidebar-mobile-panel .admin-franq-switch select{width:100%;max-width:none;}
+  .sidebar-mobile-panel .session-chip{color:#0b3438;}
+  .sidebar-mobile-panel .session-chip .role-tag{background:rgba(11,52,56,.18);}
+  .sidebar-mobile-panel .session-logout{border-color:rgba(11,52,56,.35);color:#0b3438;}
   .sidebar-title{color:#fff;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin:14px 0 6px 17px;font-family:var(--font-display);}
   .sidebar-sub{color:rgba(255,255,255,.8);font-size:11px;margin:0 17px 12px;}
   .sidebar-group-label{color:rgba(255,255,255,.75);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin:14px 17px 4px;}
@@ -453,7 +492,7 @@
         <label style="margin-left:10px;">Clave (Portal):</label>
         <select id="adminFranqCodeSelect"></select>
       </div>
-      <div class="topbar-badge"><span class="dot" id="topbarDot"></span> <span id="topbarSyncText">Conectando…</span></div>
+      <div class="topbar-badge"><span class="dot" id="topbarDot"></span> <span class="topbar-badge-text" id="topbarSyncText">Conectando…</span></div>
       <div class="topbar-title">ISO 9001:2015 · Certificado 26MS300403</div>
       <div class="session-chip" id="sessionChip" style="display:none;">
         <div class="avatar" id="sessionAvatar">?</div>
@@ -467,7 +506,9 @@
   </div>
 
   <div class="app-body">
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
     <div class="sidebar">
+      <div class="sidebar-mobile-panel" id="sidebarMobilePanel"></div>
       <div class="sidebar-title">Menú SGC</div>
       <div class="sidebar-sub">Sistema de Gestión de Calidad · Purifika</div>
       <nav class="tabs" id="navTabs">
@@ -1595,6 +1636,35 @@
   const shell = document.getElementById("appShell");
   document.getElementById("sidebarToggle").addEventListener("click", () => shell.classList.toggle("sidebar-collapsed"));
 
+  /* ---------- Responsive: sidebar tipo cajón en celular + mover los
+     selectores de Franquicia/Clave y el chip de sesión al panel móvil ---------- */
+  const MOBILE_BP = 760;
+  const mobilePanel = document.getElementById("sidebarMobilePanel");
+  const adminFranqSwitchEl = document.getElementById("adminFranqSwitch");
+  const sessionChipEl = document.getElementById("sessionChip");
+  const topbarContentZone = document.querySelector(".topbar-content-zone");
+  const topbarBadgeEl = document.querySelector(".topbar-badge");
+  const sidebarBackdrop = document.getElementById("sidebarBackdrop");
+  let isMobileLayout = null;
+
+  function applyResponsiveLayout_(){
+    const mobile = window.innerWidth <= MOBILE_BP;
+    if(mobile === isMobileLayout) return;
+    isMobileLayout = mobile;
+    if(mobile){
+      mobilePanel.appendChild(adminFranqSwitchEl);
+      mobilePanel.appendChild(sessionChipEl);
+      shell.classList.add("sidebar-collapsed");
+    } else {
+      topbarContentZone.insertBefore(adminFranqSwitchEl, topbarBadgeEl);
+      topbarContentZone.appendChild(sessionChipEl);
+      shell.classList.remove("sidebar-collapsed");
+    }
+  }
+  applyResponsiveLayout_();
+  window.addEventListener("resize", applyResponsiveLayout_);
+  sidebarBackdrop.addEventListener("click", () => shell.classList.add("sidebar-collapsed"));
+
   const views = document.querySelectorAll(".view");
   const navTabsEl = document.getElementById("navTabs");
   const breadcrumbCurrent = document.getElementById("breadcrumbCurrent");
@@ -1618,6 +1688,7 @@
     const btn = e.target.closest("button[data-view]");
     if(!btn) return;
     goto(btn.dataset.view, btn.dataset.calidadPerson);
+    if(window.innerWidth <= MOBILE_BP) shell.classList.add("sidebar-collapsed");
   });
   document.querySelectorAll("[data-goto]").forEach(el => el.addEventListener("click", () => goto(el.dataset.goto)));
 
