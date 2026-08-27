@@ -1881,9 +1881,21 @@
         const order = ["Abierta","En seguimiento","Cerrada"];
         const cur = order.indexOf(state.nc[idx].estatus);
         const nextEstatus = order[(cur+1) % order.length];
+        const prevEstatus = state.nc[idx].estatus;
+        const ncId = state.nc[idx].id;
         state.nc[idx].estatus = nextEstatus;
         renderNC();
-        apiPost("updateNCStatus", { id: state.nc[idx].id, estatus: nextEstatus }).catch(() => {});
+        apiPost("updateNCStatus", { id: ncId, estatus: nextEstatus }).then(res => {
+          if(!res || !res.ok){
+            state.nc[idx].estatus = prevEstatus;
+            renderNC();
+            alert("No se pudo guardar el cambio de estatus en Google Sheets: " + ((res && res.error) || "error desconocido") + "\n\nEl estatus se revirtió en pantalla porque no se guardó.");
+          }
+        }).catch(() => {
+          state.nc[idx].estatus = prevEstatus;
+          renderNC();
+          alert("No se pudo conectar con el servidor para guardar el cambio de estatus. El estatus se revirtió en pantalla porque no se guardó.");
+        });
       });
     });
     refreshUpNcOptions_();
