@@ -289,6 +289,21 @@
   .terms-box-foot .btn-accept{background:linear-gradient(90deg,#1E8F98,#8FE0D3);color:#fff;border:none;border-radius:6px;padding:9px 16px;font-weight:700;font-size:12.5px;cursor:pointer;}
   .terms-box-foot .btn-close2{background:#fff;border:1px solid var(--input-border);border-radius:6px;padding:9px 16px;font-weight:700;font-size:12.5px;cursor:pointer;color:var(--ink-soft);}
   #loginTerms:invalid, .login-terms.terms-missing{outline:1px solid var(--bad);border-radius:6px;}
+
+  /* ---------- Modal de Auditoría (crear/editar/eliminar evento del calendario) ---------- */
+  #audModal{position:fixed;inset:0;background:rgba(20,30,32,.55);display:none;align-items:center;justify-content:center;z-index:9999;padding:24px;}
+  #audModal.show{display:flex;}
+  .aud-modal-box{background:#fff;border-radius:12px;max-width:520px;width:100%;max-height:88vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.3);}
+  .aud-modal-head{padding:18px 22px;border-bottom:1px solid var(--input-border);display:flex;align-items:center;justify-content:space-between;}
+  .aud-modal-head h3{margin:0;font-family:var(--font-display);font-size:15px;color:var(--navy);}
+  .aud-modal-body{padding:18px 22px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;}
+  .aud-modal-body label{font-size:11px;font-weight:700;color:var(--ink-soft);text-transform:uppercase;display:block;margin-bottom:4px;}
+  .aud-modal-body input, .aud-modal-body select, .aud-modal-body textarea{width:100%;padding:8px 10px;border:1px solid var(--input-border);border-radius:6px;font-size:12.5px;font-family:var(--font-body);box-sizing:border-box;}
+  .aud-modal-body textarea{resize:vertical;min-height:60px;}
+  .aud-modal-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .aud-modal-foot{padding:14px 22px;border-top:1px solid var(--input-border);display:flex;justify-content:space-between;gap:10px;align-items:center;}
+  .aud-modal-meta{font-size:10.5px;color:var(--ink-soft);}
+  .aud-modal-error{color:var(--bad);font-size:11.5px;display:none;}
   .login-demo-note{margin-top:20px;padding:10px 12px;background:#FFF6E5;border:1px solid #F0D48A;border-radius:8px;
     font-size:10.5px;color:#8a6d1f;text-align:left;line-height:1.5;}
   .login-role-pick{margin-top:16px;display:flex;flex-direction:column;gap:6px;}
@@ -470,6 +485,67 @@
     <div class="terms-box-foot">
       <button class="btn-close2" id="termsCloseBtn">Cerrar</button>
       <button class="btn-accept" id="termsAcceptBtn">Aceptar y marcar casilla</button>
+    </div>
+  </div>
+</div>
+
+<div id="audModal">
+  <div class="aud-modal-box">
+    <div class="aud-modal-head">
+      <h3 id="audModalTitle">Nueva auditoría</h3>
+      <button class="terms-box-close" id="audModalCloseX" aria-label="Cerrar">&times;</button>
+    </div>
+    <div class="aud-modal-body">
+      <div class="aud-modal-error" id="audModalError"></div>
+      <div>
+        <label>Franquicia</label>
+        <select id="audFFranquicia"></select>
+      </div>
+      <div class="aud-modal-row">
+        <div>
+          <label>Fecha</label>
+          <input type="date" id="audFFecha">
+        </div>
+        <div>
+          <label>Tipo</label>
+          <select id="audFTipo">
+            <option value="interna">Interna</option>
+            <option value="externa">Externa</option>
+            <option value="5s">5S</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label>Alcance</label>
+        <input type="text" id="audFAlcance" placeholder="Ej. Checklists diario/semanal + almacén">
+      </div>
+      <div class="aud-modal-row">
+        <div>
+          <label>Líder auditor</label>
+          <input type="text" id="audFLider" placeholder="Nombre">
+        </div>
+        <div>
+          <label>Estatus</label>
+          <select id="audFEstatus">
+            <option value="Programada">Programada</option>
+            <option value="Ejecutada">Ejecutada</option>
+            <option value="Vencida">Vencida</option>
+            <option value="Reprogramada">Reprogramada</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label>Notas</label>
+        <textarea id="audFNotas" placeholder="Observaciones, hallazgos, referencias al informe..."></textarea>
+      </div>
+      <div class="aud-modal-meta" id="audModalMeta"></div>
+    </div>
+    <div class="aud-modal-foot">
+      <button class="btn-close2" id="audModalDelete" style="display:none;color:var(--bad);">Eliminar</button>
+      <div style="display:flex;gap:10px;margin-left:auto;">
+        <button class="btn-close2" id="audModalCancel">Cancelar</button>
+        <button class="btn-accept" id="audModalSave">Guardar</button>
+      </div>
     </div>
   </div>
 </div>
@@ -805,9 +881,10 @@
         <div class="view" id="view-auditorias">
           <h2 class="view-title">Programa y Calendario de Auditorías</h2>
           <p class="view-sub">Programa anual de auditorías internas, externas y 5S (RQ-018/RQ-019). Vincula cada evento con su informe y hallazgos.</p>
-          <div class="draft-banner">⚠️ Borrador con datos de ejemplo (claramente marcados). Falta que Calidad confirme el programa anual real para sustituirlos.</div>
+          <div class="draft-banner" id="audLoadBanner" style="display:none;"></div>
 
           <div class="aud-toolbar">
+            <button class="btn btn-primary" id="audNewBtn" style="margin-right:auto;">+ Nueva auditoría</button>
             <div class="aud-view-toggle" id="audViewToggle">
               <button data-audview="mes" class="active">Mes</button>
               <button data-audview="lista">Lista</button>
@@ -1425,18 +1502,13 @@
   }
 
   /* =====================================================================
-     AUDITORÍAS — RQ-018/019. Datos de EJEMPLO (claramente marcados), en
-     espera de que Calidad confirme el programa anual real.
+     AUDITORÍAS — RQ-018/019. Conectado a la hoja "Auditorias" en Sheets.
+     Cualquier usuario puede crear/editar/eliminar eventos; queda registrado
+     quién hizo el cambio vía registrarAuditoria_() en el backend.
      ===================================================================== */
-  const AUDITORIAS_EJEMPLO = [
-    {fecha:"2026-09-03", tipo:"interna", franquicia:"Purifika Monterrey", alcance:"Checklists diario/semanal + almacén", lider:"Karen Astorga", estatus:"Programada"},
-    {fecha:"2026-09-17", tipo:"5s", franquicia:"Purifika Jalisco", alcance:"5S piso de venta y almacén", lider:"Brandon Martínez", estatus:"Programada"},
-    {fecha:"2026-08-20", tipo:"interna", franquicia:"Purifika Puebla", alcance:"No conformidades y acciones correctivas", lider:"Alexia Meza", estatus:"Vencida"},
-    {fecha:"2026-09-25", tipo:"externa", franquicia:"Franquicia Maestra", alcance:"Auditoría de certificación ISO 9001:2015", lider:"STAREGISTER International", estatus:"Programada"},
-    {fecha:"2026-10-08", tipo:"interna", franquicia:"Purifika Cancún", alcance:"Mantenimiento preventivo y correctivo", lider:"Karen Astorga", estatus:"Programada"}
-  ];
   let audCalDate = new Date();
   let audMode = "mes";
+  let audEditingId = null;
 
   document.getElementById("audViewToggle").addEventListener("click", (e) => {
     const btn = e.target.closest("button[data-audview]"); if(!btn) return;
@@ -1445,12 +1517,12 @@
     document.getElementById("audCalendarWrap").style.display = audMode === "mes" ? "block" : "none";
     document.getElementById("audCalNav").style.display = audMode === "mes" ? "flex" : "none";
     document.getElementById("audListWrap").style.display = audMode === "lista" ? "block" : "none";
-    renderAuditorias();
+    renderAuditoriasView_();
   });
-  document.getElementById("audPrevMonth").addEventListener("click", () => { audCalDate.setMonth(audCalDate.getMonth()-1); renderAuditorias(); });
-  document.getElementById("audNextMonth").addEventListener("click", () => { audCalDate.setMonth(audCalDate.getMonth()+1); renderAuditorias(); });
-  document.getElementById("audFiltroTipo").addEventListener("change", renderAuditorias);
-  document.getElementById("audFiltroEstatus").addEventListener("change", renderAuditorias);
+  document.getElementById("audPrevMonth").addEventListener("click", () => { audCalDate.setMonth(audCalDate.getMonth()-1); renderAuditoriasView_(); });
+  document.getElementById("audNextMonth").addEventListener("click", () => { audCalDate.setMonth(audCalDate.getMonth()+1); renderAuditoriasView_(); });
+  document.getElementById("audFiltroTipo").addEventListener("change", renderAuditoriasView_);
+  document.getElementById("audFiltroEstatus").addEventListener("change", renderAuditoriasView_);
 
   function renderAuditLog(){
     const wrap = document.getElementById("auditLogTableWrap");
@@ -1482,12 +1554,29 @@
 
   function auditoriasFiltradas_(){
     const fTipo = document.getElementById("audFiltroTipo").value, fEstatus = document.getElementById("audFiltroEstatus").value;
-    return AUDITORIAS_EJEMPLO.filter(a =>
+    return state.auditorias.filter(a =>
       (!fTipo || a.tipo === fTipo) && (!fEstatus || a.estatus === fEstatus) &&
       (!state.franquiciaActiva || a.franquicia === state.franquiciaActiva || a.franquicia === "Franquicia Maestra"));
   }
 
   function renderAuditorias(){
+    const banner = document.getElementById("audLoadBanner");
+    banner.style.display = "block";
+    banner.textContent = "Cargando auditorías desde Google Sheets...";
+    apiGet("getAuditorias").then(res => {
+      if(!res || !res.ok){
+        banner.textContent = "No se pudo cargar el calendario: " + ((res && res.error) || "error desconocido");
+        return;
+      }
+      state.auditorias = res.auditorias || [];
+      banner.style.display = "none";
+      renderAuditoriasView_();
+    }).catch(err => {
+      banner.textContent = "Error de conexión: " + err.message;
+    });
+  }
+
+  function renderAuditoriasView_(){
     const eventos = auditoriasFiltradas_();
     if(audMode === "mes"){
       const y = audCalDate.getFullYear(), m = audCalDate.getMonth();
@@ -1501,25 +1590,133 @@
       for(let d=1; d<=daysInMonth; d++){
         const dateStr = `${y}-${String(m+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
         const dayEvents = eventos.filter(e => e.fecha === dateStr);
-        cells += `<div class="aud-cal-cell"><div class="aud-cal-daynum">${d}</div>
-          ${dayEvents.map(e => `<div class="aud-event tipo-${e.tipo} ${e.estatus==='Vencida'?'estatus-vencida':''}" title="${esc(e.alcance)} · ${esc(e.lider)}">${esc(e.franquicia)}</div>`).join("")}
+        cells += `<div class="aud-cal-cell" data-date="${dateStr}"><div class="aud-cal-daynum">${d}</div>
+          ${dayEvents.map(e => `<div class="aud-event tipo-${esc(e.tipo)} ${e.estatus==='Vencida'?'estatus-vencida':''}" data-audid="${esc(e.id)}" title="${esc(e.alcance)} · ${esc(e.lider)}">${esc(e.franquicia)}</div>`).join("")}
         </div>`;
       }
       const totalCells = firstDow + daysInMonth;
       const trailing = (7 - (totalCells % 7)) % 7;
       for(let i=1;i<=trailing;i++) cells += `<div class="aud-cal-cell other-month"><div class="aud-cal-daynum">${i}</div></div>`;
-      document.getElementById("audCalendarWrap").innerHTML = `<div class="aud-cal-grid">${cells}</div>`;
+      const calWrap = document.getElementById("audCalendarWrap");
+      calWrap.innerHTML = `<div class="aud-cal-grid">${cells}</div>`;
+      calWrap.querySelectorAll("[data-audid]").forEach(el => {
+        el.addEventListener("click", (ev) => { ev.stopPropagation(); openAuditoriaModal_(el.dataset.audid); });
+      });
+      calWrap.querySelectorAll(".aud-cal-cell[data-date]").forEach(el => {
+        el.addEventListener("click", () => openAuditoriaModal_(null, el.dataset.date));
+      });
     } else {
       const filas = eventos.slice().sort((a,b)=>a.fecha.localeCompare(b.fecha)).map(e => `
-        <tr><td>${esc(e.fecha)}</td><td style="text-transform:capitalize;">${esc(e.tipo)}</td><td>${esc(e.franquicia)}</td>
+        <tr data-audid="${esc(e.id)}" style="cursor:pointer;"><td>${esc(e.fecha)}</td><td style="text-transform:capitalize;">${esc(e.tipo)}</td><td>${esc(e.franquicia)}</td>
         <td>${esc(e.alcance)}</td><td>${esc(e.lider)}</td>
-        <td><span class="aud-status-pill status-${e.estatus.toLowerCase()}">${esc(e.estatus)}</span></td></tr>`).join("");
-      document.getElementById("audListWrap").innerHTML = `<div class="panel"><table class="aud-list-table">
+        <td><span class="aud-status-pill status-${(e.estatus||'').toLowerCase()}">${esc(e.estatus)}</span></td></tr>`).join("");
+      const listWrap = document.getElementById("audListWrap");
+      listWrap.innerHTML = `<div class="panel"><table class="aud-list-table">
         <thead><tr><th>Fecha</th><th>Tipo</th><th>Franquicia</th><th>Alcance</th><th>Líder auditor</th><th>Estatus</th></tr></thead>
         <tbody>${filas || `<tr><td colspan="6" style="color:var(--ink-soft);">Sin auditorías con ese filtro.</td></tr>`}</tbody>
       </table></div>`;
+      listWrap.querySelectorAll("[data-audid]").forEach(el => {
+        el.addEventListener("click", () => openAuditoriaModal_(el.dataset.audid));
+      });
     }
   }
+
+  /* ---------- Modal crear/editar/eliminar auditoría ---------- */
+  function populateAudFranquiciaSelect_(){
+    const sel = document.getElementById("audFFranquicia");
+    if(sel.options.length) return;
+    const opts = ["Franquicia Maestra", ...FRANQUICIAS];
+    sel.innerHTML = opts.map(f => `<option value="${esc(f)}">${esc(f)}</option>`).join("");
+  }
+
+  function openAuditoriaModal_(id, presetDate){
+    populateAudFranquiciaSelect_();
+    audEditingId = id || null;
+    const errEl = document.getElementById("audModalError");
+    errEl.style.display = "none";
+    const meta = document.getElementById("audModalMeta");
+    if(id){
+      const a = state.auditorias.find(x => String(x.id) === String(id));
+      if(!a) return;
+      document.getElementById("audModalTitle").textContent = "Editar auditoría";
+      document.getElementById("audFFranquicia").value = a.franquicia || "";
+      document.getElementById("audFFecha").value = a.fecha || "";
+      document.getElementById("audFTipo").value = a.tipo || "interna";
+      document.getElementById("audFAlcance").value = a.alcance || "";
+      document.getElementById("audFLider").value = a.lider || "";
+      document.getElementById("audFEstatus").value = a.estatus || "Programada";
+      document.getElementById("audFNotas").value = a.notas || "";
+      document.getElementById("audModalDelete").style.display = "";
+      const mp = a.modificadoPor || a.creadoPor || "";
+      meta.textContent = mp ? ("Última modificación por " + mp) : "";
+    } else {
+      document.getElementById("audModalTitle").textContent = "Nueva auditoría";
+      document.getElementById("audFFranquicia").value = state.franquiciaActiva || "Franquicia Maestra";
+      document.getElementById("audFFecha").value = presetDate || "";
+      document.getElementById("audFTipo").value = "interna";
+      document.getElementById("audFAlcance").value = "";
+      document.getElementById("audFLider").value = "";
+      document.getElementById("audFEstatus").value = "Programada";
+      document.getElementById("audFNotas").value = "";
+      document.getElementById("audModalDelete").style.display = "none";
+      meta.textContent = "";
+    }
+    document.getElementById("audModal").classList.add("show");
+  }
+  function closeAuditoriaModal_(){ document.getElementById("audModal").classList.remove("show"); }
+  document.getElementById("audNewBtn").addEventListener("click", () => openAuditoriaModal_(null));
+  document.getElementById("audModalCloseX").addEventListener("click", closeAuditoriaModal_);
+  document.getElementById("audModalCancel").addEventListener("click", closeAuditoriaModal_);
+  document.getElementById("audModal").addEventListener("click", (e) => { if(e.target.id === "audModal") closeAuditoriaModal_(); });
+
+  document.getElementById("audModalSave").addEventListener("click", () => {
+    const fecha = document.getElementById("audFFecha").value;
+    const franquicia = document.getElementById("audFFranquicia").value;
+    const errEl = document.getElementById("audModalError");
+    if(!fecha || !franquicia){
+      errEl.textContent = "Fecha y franquicia son obligatorias.";
+      errEl.style.display = "block";
+      return;
+    }
+    const payload = {
+      id: audEditingId || undefined,
+      franquicia, fecha, titulo: franquicia,
+      tipo: document.getElementById("audFTipo").value,
+      alcance: document.getElementById("audFAlcance").value,
+      lider: document.getElementById("audFLider").value,
+      estatus: document.getElementById("audFEstatus").value,
+      notas: document.getElementById("audFNotas").value
+    };
+    const btn = document.getElementById("audModalSave");
+    btn.disabled = true; btn.textContent = "Guardando...";
+    apiPost("saveAuditoria", payload).then(res => {
+      btn.disabled = false; btn.textContent = "Guardar";
+      if(!res || !res.ok){
+        errEl.textContent = "No se pudo guardar: " + ((res && res.error) || "error desconocido");
+        errEl.style.display = "block";
+        return;
+      }
+      closeAuditoriaModal_();
+      renderAuditorias();
+    }).catch(err => {
+      btn.disabled = false; btn.textContent = "Guardar";
+      errEl.textContent = "Error de conexión: " + err.message;
+      errEl.style.display = "block";
+    });
+  });
+
+  document.getElementById("audModalDelete").addEventListener("click", () => {
+    if(!audEditingId) return;
+    if(!confirm("¿Eliminar esta auditoría? Esta acción no se puede deshacer.")) return;
+    apiPost("deleteAuditoria", {id: audEditingId}).then(res => {
+      if(!res || !res.ok){
+        alert("No se pudo eliminar: " + ((res && res.error) || "error desconocido"));
+        return;
+      }
+      closeAuditoriaModal_();
+      renderAuditorias();
+    }).catch(err => alert("Error de conexión: " + err.message));
+  });
 
   /* ---------- Datos reales extraídos de ADC-F-FR-01 ---------- */
   const DIAS = ["Lunes","Martes","Miércoles","Jueves","Viernes"];
@@ -1670,7 +1867,8 @@
     mensual: {},
     nc: [...SEED_NC],
     archivos: [],
-    franquiciaActiva: ""
+    franquiciaActiva: "",
+    auditorias: []
   };
   let ncCounter = SEED_NC.length + 1;
 
