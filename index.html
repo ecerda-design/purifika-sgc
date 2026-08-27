@@ -974,7 +974,7 @@
     renderCalidadTabs_();
     goto("inicio");
     resetInactivityTimer_();
-        syncWithBackend();
+    syncWithBackend();
   }
 
   function endSession_(mensaje){
@@ -1014,7 +1014,7 @@
       inactivityWarnShown_ = true;
       const dot = document.getElementById("topbarDot");
       const txt = document.getElementById("topbarSyncText");
-      if(dot && txt){ dot.style.background = "var(--regular)"; txt.textContent = "Tu sesión se cerrará en 1 min por inactividad…"; }
+      if(dot && txt){ dot.style.background = "var(--warn)"; txt.textContent = "Tu sesión se cerrará en 1 min por inactividad…"; }
     }, INACTIVITY_LIMIT_MS - INACTIVITY_WARN_MS);
     inactivityLogoutId_ = setTimeout(() => {
       endSession_("Tu sesión se cerró automáticamente por inactividad (20 min). Vuelve a iniciar sesión.");
@@ -2222,6 +2222,10 @@
   }
 
   /* ---------- Init ---------- */
+  // Nota: syncWithBackend() NO se llama aquí. El backend exige sesión valida
+  // (RQ de seguridad), asi que llamarlo antes del login siempre falla con
+  // "authRequired" y gasta cuota del backend sin necesidad. Ya se dispara
+  // correctamente dentro de startSession() una vez que el login es exitoso.
   renderDiario();
   renderSemanal();
   renderMensual();
@@ -2230,7 +2234,6 @@
   renderLibByArea();
   renderLibByIso();
   renderDashboard();
-  syncWithBackend();
 
 })();
 </script>
