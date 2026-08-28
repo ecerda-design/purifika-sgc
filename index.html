@@ -550,6 +550,10 @@
         <label>Notas</label>
         <textarea id="audFNotas" placeholder="Observaciones, hallazgos, referencias al informe..."></textarea>
       </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <input type="checkbox" id="audFGCal" style="width:auto;">
+        <label for="audFGCal" style="margin:0;text-transform:none;font-weight:400;font-size:12px;color:var(--ink);cursor:pointer;">Vincular a Google Calendar (se crea/actualiza un evento en el calendario de la cuenta del SGC)</label>
+      </div>
       <div class="aud-modal-meta" id="audModalMeta"></div>
     </div>
     <div class="aud-modal-foot">
@@ -1702,9 +1706,10 @@
       document.getElementById("audFLider").value = a.lider || "";
       document.getElementById("audFEstatus").value = a.estatus || "Programada";
       document.getElementById("audFNotas").value = a.notas || "";
+      document.getElementById("audFGCal").checked = !!a.gcalEventId;
       document.getElementById("audModalDelete").style.display = "";
       const mp = a.modificadoPor || a.creadoPor || "";
-      meta.textContent = mp ? ("Última modificación por " + mp) : "";
+      meta.textContent = (mp ? ("Última modificación por " + mp) : "") + (a.gcalEventId ? " · Vinculada a Google Calendar" : "");
     } else {
       document.getElementById("audModalTitle").textContent = "Nueva auditoría";
       document.getElementById("audFFranquicia").value = state.franquiciaActiva || "Franquicia Maestra";
@@ -1714,6 +1719,7 @@
       document.getElementById("audFLider").value = "";
       document.getElementById("audFEstatus").value = "Programada";
       document.getElementById("audFNotas").value = "";
+      document.getElementById("audFGCal").checked = false;
       document.getElementById("audModalDelete").style.display = "none";
       meta.textContent = "";
     }
@@ -1741,7 +1747,8 @@
       alcance: document.getElementById("audFAlcance").value,
       lider: document.getElementById("audFLider").value,
       estatus: document.getElementById("audFEstatus").value,
-      notas: document.getElementById("audFNotas").value
+      notas: document.getElementById("audFNotas").value,
+      sincronizarCalendario: document.getElementById("audFGCal").checked
     };
     const btn = document.getElementById("audModalSave");
     btn.disabled = true; btn.textContent = "Guardando...";
