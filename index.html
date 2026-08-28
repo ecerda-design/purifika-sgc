@@ -290,6 +290,18 @@
   .terms-box-foot .btn-close2{background:#fff;border:1px solid var(--input-border);border-radius:6px;padding:9px 16px;font-weight:700;font-size:12.5px;cursor:pointer;color:var(--ink-soft);}
   #loginTerms:invalid, .login-terms.terms-missing{outline:1px solid var(--bad);border-radius:6px;}
 
+  /* ---------- Modal de confirmación / notificaciones (reemplaza confirm()/alert() nativos) ---------- */
+  #confirmModal{position:fixed;inset:0;background:rgba(20,30,32,.55);display:none;align-items:center;justify-content:center;z-index:10001;padding:24px;}
+  #confirmModal.show{display:flex;}
+  .confirm-box{background:#fff;border-radius:12px;max-width:420px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.3);padding:22px;}
+  .confirm-box p{margin:0 0 18px;font-size:13px;line-height:1.55;color:var(--ink);}
+  .confirm-box-foot{display:flex;justify-content:flex-end;gap:10px;}
+  #toastContainer{position:fixed;bottom:20px;right:20px;z-index:10002;display:flex;flex-direction:column;gap:8px;max-width:360px;}
+  .toast{background:#fff;border-radius:8px;padding:12px 16px;font-size:12.5px;line-height:1.5;box-shadow:0 8px 24px rgba(0,0,0,.2);border-left:4px solid var(--info);color:var(--ink);animation:toastIn .18s ease;}
+  .toast.toast-error{border-left-color:var(--bad);}
+  .toast.toast-success{border-left-color:var(--ok);}
+  @keyframes toastIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
   /* ---------- Modal de Auditoría (crear/editar/eliminar evento del calendario) ---------- */
   #audModal{position:fixed;inset:0;background:rgba(20,30,32,.55);display:none;align-items:center;justify-content:center;z-index:9999;padding:24px;}
   #audModal.show{display:flex;}
@@ -549,6 +561,17 @@
     </div>
   </div>
 </div>
+
+<div id="confirmModal">
+  <div class="confirm-box">
+    <p id="confirmModalMsg"></p>
+    <div class="confirm-box-foot">
+      <button class="btn-close2" id="confirmModalCancel">Cancelar</button>
+      <button class="btn-accept" id="confirmModalOk" style="background:var(--bad);">Confirmar</button>
+    </div>
+  </div>
+</div>
+<div id="toastContainer"></div>
 
 <div class="app-shell" id="appShell">
 
@@ -985,6 +1008,39 @@
   }
 
   const esc = s => (s||"").toString().replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+  /* ---------- Confirmación y notificaciones propias (sin confirm()/alert() nativos) ---------- */
+  function confirmDialog_(message){
+    return new Promise(resolve => {
+      const modal = document.getElementById("confirmModal");
+      document.getElementById("confirmModalMsg").textContent = message;
+      modal.classList.add("show");
+      const okBtn = document.getElementById("confirmModalOk");
+      const cancelBtn = document.getElementById("confirmModalCancel");
+      function cleanup(result){
+        modal.classList.remove("show");
+        okBtn.removeEventListener("click", onOk);
+        cancelBtn.removeEventListener("click", onCancel);
+        modal.removeEventListener("click", onBackdrop);
+        resolve(result);
+      }
+      function onOk(){ cleanup(true); }
+      function onCancel(){ cleanup(false); }
+      function onBackdrop(e){ if(e.target.id === "confirmModal") cleanup(false); }
+      okBtn.addEventListener("click", onOk);
+      cancelBtn.addEventListener("click", onCancel);
+      modal.addEventListener("click", onBackdrop);
+    });
+  }
+
+  function toast_(message, type){
+    const container = document.getElementById("toastContainer");
+    const div = document.createElement("div");
+    div.className = "toast" + (type ? " toast-" + type : "");
+    div.textContent = message;
+    container.appendChild(div);
+    setTimeout(() => { div.remove(); }, 6000);
+  }
 
   /* =====================================================================
      AUTENTICACIÓN — RQ-005 (ACTIVO EN PRODUCCIÓN)
@@ -1705,17 +1761,19 @@
     });
   });
 
-  document.getElementById("audModalDelete").addEventListener("click", () => {
+  document.getElementById("audModalDelete").addEventListener("click", async () => {
     if(!audEditingId) return;
-    if(!confirm("¿Eliminar esta auditoría? Esta acción no se puede deshacer.")) return;
+    const ok = await confirmDialog_("¿Eliminar esta auditoría? Esta acción no se puede deshacer.");
+    if(!ok) return;
     apiPost("deleteAuditoria", {id: audEditingId}).then(res => {
       if(!res || !res.ok){
-        alert("No se pudo eliminar: " + ((res && res.error) || "error desconocido"));
+        toast_("No se pudo eliminar: " + ((res && res.error) || "error desconocido"), "error");
         return;
       }
       closeAuditoriaModal_();
       renderAuditorias();
-    }).catch(err => alert("Error de conexión: " + err.message));
+      toast_("Auditoría eliminada.", "success");
+    }).catch(err => toast_("Error de conexión: " + err.message, "error"));
   });
 
   /* ---------- Datos reales extraídos de ADC-F-FR-01 ---------- */
@@ -2133,12 +2191,12 @@
           if(!res || !res.ok){
             state.nc[idx].estatus = prevEstatus;
             renderNC();
-            alert("No se pudo guardar el cambio de estatus en Google Sheets: " + ((res && res.error) || "error desconocido") + "\n\nEl estatus se revirtió en pantalla porque no se guardó.");
+            toast_("No se pudo guardar el cambio de estatus: " + ((res && res.error) || "error desconocido") + " — se revirtió en pantalla.", "error");
           }
         }).catch(() => {
           state.nc[idx].estatus = prevEstatus;
           renderNC();
-          alert("No se pudo conectar con el servidor para guardar el cambio de estatus. El estatus se revirtió en pantalla porque no se guardó.");
+          toast_("No se pudo conectar con el servidor. El estatus se revirtió en pantalla porque no se guardó.", "error");
         });
       });
     });
@@ -2150,7 +2208,7 @@
     const descripcion = document.getElementById("ncDescripcion").value.trim();
     const franquicia = document.getElementById("ncFranquicia").value.trim();
     if(!fecha || !descripcion || !franquicia){
-      alert("Completa al menos fecha, franquicia y descripción de la no conformidad.");
+      toast_("Completa al menos fecha, franquicia y descripción de la no conformidad.", "error");
       return;
     }
     const statusEl = document.getElementById("ncGuardarStatus");
@@ -2240,7 +2298,7 @@
     const file = fileInput.files[0];
     const statusEl = document.getElementById("upStatus");
     const btn = document.getElementById("upGuardar");
-    if(!file){ alert("Selecciona un archivo primero."); return; }
+    if(!file){ toast_("Selecciona un archivo primero.", "error"); return; }
     if(!BACKEND_CONFIGURED){ statusEl.textContent = "Backend no configurado todavía."; return; }
 
     btn.disabled = true;
