@@ -609,6 +609,12 @@
           <input type="text" id="audFLider" placeholder="Nombre">
         </div>
         <div>
+          <label>Correo del líder (opcional)</label>
+          <input type="email" id="audFLiderEmail" placeholder="nombre@purifika.com">
+        </div>
+      </div>
+      <div class="aud-modal-row">
+        <div>
           <label>Estatus</label>
           <select id="audFEstatus">
             <option value="Programada">Programada</option>
@@ -617,6 +623,7 @@
             <option value="Reprogramada">Reprogramada</option>
           </select>
         </div>
+        <div></div>
       </div>
       <div>
         <label>Notas</label>
@@ -624,7 +631,7 @@
       </div>
       <div style="display:flex;align-items:center;gap:8px;">
         <input type="checkbox" id="audFGCal" style="width:auto;">
-        <label for="audFGCal" style="margin:0;text-transform:none;font-weight:400;font-size:12px;color:var(--ink);cursor:pointer;">Vincular a Google Calendar (se crea/actualiza un evento en el calendario de la cuenta del SGC)</label>
+        <label for="audFGCal" style="margin:0;text-transform:none;font-weight:400;font-size:12px;color:var(--ink);cursor:pointer;">Vincular a Google Calendar (crea/actualiza el evento y, si capturaste el correo del líder, lo invita para que le aparezca en su propio calendario)</label>
       </div>
       <div class="aud-modal-meta" id="audModalMeta"></div>
     </div>
@@ -1776,6 +1783,7 @@
       document.getElementById("audFTipo").value = a.tipo || "interna";
       document.getElementById("audFAlcance").value = a.alcance || "";
       document.getElementById("audFLider").value = a.lider || "";
+      document.getElementById("audFLiderEmail").value = a.liderEmail || "";
       document.getElementById("audFEstatus").value = a.estatus || "Programada";
       document.getElementById("audFNotas").value = a.notas || "";
       document.getElementById("audFGCal").checked = !!a.gcalEventId;
@@ -1789,6 +1797,7 @@
       document.getElementById("audFTipo").value = "interna";
       document.getElementById("audFAlcance").value = "";
       document.getElementById("audFLider").value = "";
+      document.getElementById("audFLiderEmail").value = "";
       document.getElementById("audFEstatus").value = "Programada";
       document.getElementById("audFNotas").value = "";
       document.getElementById("audFGCal").checked = false;
@@ -1818,6 +1827,7 @@
       tipo: document.getElementById("audFTipo").value,
       alcance: document.getElementById("audFAlcance").value,
       lider: document.getElementById("audFLider").value,
+      liderEmail: document.getElementById("audFLiderEmail").value.trim(),
       estatus: document.getElementById("audFEstatus").value,
       notas: document.getElementById("audFNotas").value,
       sincronizarCalendario: document.getElementById("audFGCal").checked
