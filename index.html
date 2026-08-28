@@ -2,7 +2,12 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#2B3643">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Purifika SGC">
 <title>Purifika · Sistema de Gestión de Calidad</title>
 <link rel="icon" type="image/png" href="https://i.ibb.co/QF9XQCdw/purifika-favicon-64.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -400,6 +405,73 @@
   .stats-toplist li:last-child{border-bottom:none;}
   .stats-toplist .badge{font-weight:800;padding:1px 8px;border-radius:20px;color:#fff;font-size:10px;flex:none;}
   .ind-card canvas{margin-top:6px;height:34px !important;}
+
+  /* =====================================================================
+     PAQUETE DE MEJORAS DE USO EN CELULAR
+     Todo lo de aquí abajo son ajustes SOLO para pantallas angostas; en
+     escritorio el diseño existente no cambia en nada.
+     ===================================================================== */
+
+  /* Objetivos táctiles: evita el doble-tap-zoom de iOS/Android en toda la
+     app y hace los controles más fáciles de tocar con el dedo. */
+  button, .btn, .mark-btn, a, select, input[type="checkbox"]{touch-action:manipulation;}
+
+  @media(max-width:760px){
+    /* Menos aire desperdiciado en pantallas chicas */
+    main{padding:16px 12px 40px;}
+    .panel{padding:16px;}
+    .breadcrumb-bar{padding:10px 14px;}
+    h2.view-title{font-size:17px;}
+
+    /* Evita que iOS haga zoom automático al tocar un campo: cualquier
+       input/select/textarea con letra menor a 16px dispara ese zoom. */
+    input, select, textarea{font-size:16px !important;}
+
+    /* Botones y controles con más área de toque */
+    .btn{padding:11px 16px;font-size:13px;}
+    .filter-field select, .filter-field input{height:40px;}
+    .mark-btn{width:38px;height:38px;font-size:15px;}
+    .seg-toggle button{padding:10px 14px;}
+
+    /* Biblioteca: la barra de búsqueda ya no fuerza scroll horizontal */
+    .lib-toolbar{flex-direction:column;align-items:stretch;}
+    .lib-search{min-width:0;width:100%;}
+
+    /* Modal de auditoría: una sola columna y menos padding lateral */
+    .aud-modal-row{grid-template-columns:1fr;}
+    .aud-modal-head, .aud-modal-body, .aud-modal-foot{padding-left:14px;padding-right:14px;}
+    .aud-modal-box{max-height:92vh;}
+
+    /* Toasts: ancho completo en vez de una cajita flotando a la derecha */
+    #toastContainer{left:10px;right:10px;bottom:12px;max-width:none;}
+
+    /* Semanal: la columna fija de 140px para la etiqueta ya no cabe cómoda */
+    .week-inputs{grid-template-columns:1fr;}
+  }
+
+  /* ---------- Check List Diario en modo tarjeta (celular) ----------
+     La tabla de 7 columnas (Actividad + 5 días + Observaciones) es
+     ilegible en una pantalla angosta. Debajo de 700px cada renglón se
+     convierte en una tarjeta: la actividad como título y cada día con su
+     etiqueta, para que no haya que hacer scroll horizontal ni entrecerrar
+     los ojos para leer qué día es cada columna. */
+  @media(max-width:700px){
+    table.cl-table, table.cl-table thead, table.cl-table tbody,
+    table.cl-table tr, table.cl-table th, table.cl-table td{display:block;}
+    table.cl-table thead{display:none;}
+    table.cl-table tr{padding:12px 14px 10px;border-bottom:1px solid var(--line);}
+    table.cl-table tr:last-child{border-bottom:none;}
+    table.cl-table td{border-bottom:none;padding:6px 0;display:flex;align-items:center;
+      justify-content:space-between;gap:10px;text-align:right;}
+    table.cl-table td::before{content:attr(data-label);font-size:10.5px;font-weight:800;
+      text-transform:uppercase;letter-spacing:.3px;color:var(--ink-soft);flex:none;text-align:left;}
+    table.cl-table td:first-child{display:block;padding:0 0 10px;font-weight:700;font-size:13px;
+      text-align:left;border-bottom:1px dashed var(--line);margin-bottom:4px;}
+    table.cl-table td:first-child::before{display:none;}
+    table.cl-table td:last-child{display:block;}
+    table.cl-table td:last-child::before{display:block;margin-bottom:5px;}
+    table.cl-table td:last-child .obs-input{width:100%;}
+  }
 </style>
 </head>
 <body>
@@ -2009,8 +2081,24 @@
   document.getElementById("semanalMes").value = currentMonthStr;
   document.getElementById("mensualMes").value = currentMonthStr;
 
-  /* ---------- Render Diario ---------- */
-  function markKey(itemId, dia){ return itemId + "_" + dia; }
+  /* ---------- Semana del mes (para que el Check List Diario siempre arranque
+     en la semana real de hoy, en vez de quedarse fijo en "Semana 1") ---------- */
+  function semanaDelMes_(d){
+    return "Semana " + Math.min(5, Math.ceil(d.getDate() / 7));
+  }
+  document.getElementById("diarioSemana").value = semanaDelMes_(now);
+
+  /* ---------- Render Diario ----------
+     IMPORTANTE (fix precarga de respuestas): la clave de estado ahora incluye
+     mes + semana, no solo el nombre del día. Antes, "Lunes" de CUALQUIER semana
+     u mes pasado pisaba el "Lunes" de hoy, por eso el check list aparecía
+     siempre precargado con marcas viejas. Al leer mes/semana en vivo desde los
+     selects del filtro, cada periodo queda aislado. */
+  function markKey(itemId, dia, mes, semana){
+    mes = mes || document.getElementById("diarioMes").value || currentMonthStr;
+    semana = semana || document.getElementById("diarioSemana").value || semanaDelMes_(now);
+    return itemId + "_" + dia + "_" + mes + "_" + semana;
+  }
 
   function renderDiario(){
     const cont = document.getElementById("diarioContainer");
@@ -2023,16 +2111,16 @@
         <table class="cl-table"><thead><tr><th>Actividad de verificación</th>
         ${DIAS.map(d => `<th class="day-cell">${d.slice(0,3)}</th>`).join("")}<th style="min-width:160px;">Observaciones</th></tr></thead><tbody>`;
       groups[proc].forEach(it => {
-        html += `<tr><td>${esc(it.text)}</td>`;
+        html += `<tr><td data-label="Actividad">${esc(it.text)}</td>`;
         DIAS.forEach(dia => {
           const k = markKey(it.id, dia);
           const rec = state.diario[k];
           const cls = rec ? (rec.mark === "ok" ? "ok" : "bad") : "";
           const symbol = rec ? (rec.mark === "ok" ? "✓" : "✗") : "–";
-          html += `<td><button class="mark-btn ${cls}" data-item="${it.id}" data-dia="${dia}">${symbol}</button></td>`;
+          html += `<td data-label="${dia}"><button class="mark-btn ${cls}" data-item="${it.id}" data-dia="${dia}">${symbol}</button></td>`;
         });
         const obsVal = (state.diario[markKey(it.id,"obs_"+it.id)] || {}).obs || "";
-        html += `<td><input type="text" class="obs-input" data-obs="${it.id}" placeholder="Motivo si hay ✗" value="${esc(obsVal)}"></td></tr>`;
+        html += `<td data-label="Observaciones"><input type="text" class="obs-input" data-obs="${it.id}" placeholder="Motivo si hay ✗" value="${esc(obsVal)}"></td></tr>`;
       });
       html += `</tbody></table></div>`;
     });
@@ -2421,8 +2509,9 @@
 
   function renderDashboard(){
     const todayDia = DIAS[[1,2,3,4,5].indexOf(now.getDay())] || null;
+    const todayMesReal = currentMonthStr, todaySemanaReal = semanaDelMes_(now);
     let doneToday = 0;
-    DIARIO_ITEMS.forEach(it => { if(todayDia && state.diario[markKey(it.id, todayDia)]) doneToday++; });
+    DIARIO_ITEMS.forEach(it => { if(todayDia && state.diario[markKey(it.id, todayDia, todayMesReal, todaySemanaReal)]) doneToday++; });
     const diarioPct = todayDia ? pct(doneToday, DIARIO_ITEMS.length) : null;
     const kpiD = document.getElementById("kpiDiario");
     kpiD.textContent = todayDia ? diarioPct + "%" : "Fin de semana";
@@ -2444,7 +2533,7 @@
       list.innerHTML = `<li><span class="txt">Hoy es fin de semana. No hay check list diario programado.</span></li>`;
     } else {
       list.innerHTML = DIARIO_ITEMS.map(it => {
-        const rec = state.diario[markKey(it.id, todayDia)];
+        const rec = state.diario[markKey(it.id, todayDia, todayMesReal, todaySemanaReal)];
         const done = !!rec;
         return `<li><span class="tag">${esc(it.proc)}</span><span class="txt">${esc(it.text)}</span>${done ? `<span class="done">${rec.mark === "ok" ? "✓ Cumplida" : "✗ Con motivo"}</span>` : `<span style="color:var(--ink-soft);font-size:11px;">Pendiente</span>`}</li>`;
       }).join("");
@@ -2465,6 +2554,11 @@
     pdf.addImage(imgData, "PNG", 20, 20, canvas.width*ratio - 40, canvas.height*ratio - 40);
     pdf.save(filename);
   }
+  // Cambiar de mes o semana debe re-pintar el check list con las marcas de ESE
+  // periodo (antes los selects no hacían nada al cambiar: eran solo decorativos).
+  document.getElementById("diarioMes").addEventListener("change", renderDiario);
+  document.getElementById("diarioSemana").addEventListener("change", renderDiario);
+
   document.getElementById("exportDiarioPdf").addEventListener("click", () => exportNodeToPdf("diarioContainer", "PurifiKa_CheckList_Diario.pdf"));
   document.getElementById("exportAllPdf").addEventListener("click", () => exportNodeToPdf("diarioContainer", "PurifiKa_CheckList_Diario.pdf"));
 
@@ -2486,11 +2580,17 @@
   }
 
   function hydrateFromBackend_(data){
-    // Check list diario: reconstruye state.diario a partir de las filas guardadas
+    // Check list diario: reconstruye state.diario a partir de las filas guardadas.
+    // Cada fila trae su propio Mes y Semana (se guardan desde persistDiarioMark_),
+    // así que la reconstrucción respeta el periodo real de cada marca en vez de
+    // mezclar todas las semanas bajo el mismo nombre de día.
     (data.diario || []).forEach(row => {
       if(row.ItemId && row.Dia){
-        state.diario[markKey(row.ItemId, row.Dia)] = { mark: row.Marca === "ok" ? "ok" : "bad" };
-        if(row.Observaciones) state.diario[markKey(row.ItemId, "obs_"+row.ItemId)] = { obs: row.Observaciones };
+        const rowMes = row.Mes || row.mes || "";
+        const rowSemana = row.Semana || row.semana || "";
+        if(!rowMes || !rowSemana) return; // fila sin periodo: se ignora en vez de mostrarse en el periodo equivocado
+        state.diario[markKey(row.ItemId, row.Dia, rowMes, rowSemana)] = { mark: row.Marca === "ok" ? "ok" : "bad" };
+        if(row.Observaciones) state.diario[markKey(row.ItemId, "obs_"+row.ItemId, rowMes, rowSemana)] = { obs: row.Observaciones };
       }
     });
     // Semanal
