@@ -309,7 +309,9 @@
 
   /* ---------- Modal de Auditoría (crear/editar/eliminar evento del calendario) ---------- */
   #audModal{position:fixed;inset:0;background:rgba(20,30,32,.55);display:none;align-items:center;justify-content:center;z-index:9999;padding:24px;}
+  #miPerfilModal{position:fixed;inset:0;background:rgba(20,30,32,.55);display:none;align-items:center;justify-content:center;z-index:9999;padding:24px;}
   #audModal.show{display:flex;}
+  #miPerfilModal.show{display:flex;}
   .aud-modal-box{background:#fff;border-radius:12px;max-width:520px;width:100%;max-height:88vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.3);}
   .aud-modal-head{padding:18px 22px;border-bottom:1px solid var(--input-border);display:flex;align-items:center;justify-content:space-between;}
   .aud-modal-head h3{margin:0;font-family:var(--font-display);font-size:15px;color:var(--navy);}
@@ -606,7 +608,7 @@
       <div class="aud-modal-row">
         <div>
           <label>Líder auditor</label>
-          <input type="text" id="audFLider" placeholder="Nombre">
+          <select id="audFLider"></select>
         </div>
         <div>
           <label>Correo del líder (opcional)</label>
@@ -640,6 +642,37 @@
       <div style="display:flex;gap:10px;margin-left:auto;">
         <button class="btn-close2" id="audModalCancel">Cancelar</button>
         <button class="btn-accept" id="audModalSave">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="miPerfilModal">
+  <div class="aud-modal-box" style="max-width:400px;">
+    <div class="aud-modal-head">
+      <h3>Datos del usuario</h3>
+      <button class="terms-box-close" id="miPerfilCloseX" aria-label="Cerrar">&times;</button>
+    </div>
+    <div class="aud-modal-body">
+      <div class="aud-modal-error" id="miPerfilError"></div>
+      <p style="margin:0 0 4px;font-size:12px;color:var(--ink-soft);">Captura tu correo una sola vez aquí. A partir de eso, cada vez que te elijan como líder en una auditoría, tu correo se completa solo (y te invita a Google Calendar si se vincula el evento).</p>
+      <div>
+        <label>Nombre</label>
+        <input type="text" id="miPerfilNombre" disabled>
+      </div>
+      <div>
+        <label>Usuario</label>
+        <input type="text" id="miPerfilUsuario" disabled>
+      </div>
+      <div>
+        <label>Mi correo</label>
+        <input type="email" id="miPerfilCorreo" placeholder="nombre@purifika.com">
+      </div>
+    </div>
+    <div class="aud-modal-foot">
+      <div style="display:flex;gap:10px;margin-left:auto;">
+        <button class="btn-close2" id="miPerfilCancel">Cancelar</button>
+        <button class="btn-accept" id="miPerfilSave">Guardar</button>
       </div>
     </div>
   </div>
@@ -682,6 +715,7 @@
           <div id="sessionName" style="font-weight:700;"></div>
           <span class="role-tag" id="sessionRoleTag"></span>
         </div>
+        <button class="session-logout" id="sessionProfileBtn" style="margin-right:6px;">Mi perfil</button>
         <button class="session-logout" id="sessionLogoutBtn">Salir</button>
       </div>
     </div>
@@ -1207,6 +1241,7 @@
     goto("inicio");
     resetInactivityTimer_();
     syncWithBackend();
+    loadUsuarios_();
   }
 
   function endSession_(mensaje){
@@ -1224,6 +1259,45 @@
   }
 
   document.getElementById("sessionLogoutBtn").addEventListener("click", () => endSession_());
+
+  /* ---------- Modal "Mi perfil" / Datos del usuario ---------- */
+  function openMiPerfil_(){
+    if(!session) return;
+    document.getElementById("miPerfilError").style.display = "none";
+    document.getElementById("miPerfilNombre").value = session.nombre || "";
+    document.getElementById("miPerfilUsuario").value = session.usuario || "";
+    document.getElementById("miPerfilCorreo").value = session.correo || "";
+    document.getElementById("miPerfilModal").classList.add("show");
+  }
+  function closeMiPerfil_(){ document.getElementById("miPerfilModal").classList.remove("show"); }
+  document.getElementById("sessionProfileBtn").addEventListener("click", openMiPerfil_);
+  document.getElementById("miPerfilCloseX").addEventListener("click", closeMiPerfil_);
+  document.getElementById("miPerfilCancel").addEventListener("click", closeMiPerfil_);
+  document.getElementById("miPerfilModal").addEventListener("click", (e) => { if(e.target.id === "miPerfilModal") closeMiPerfil_(); });
+  document.getElementById("miPerfilSave").addEventListener("click", () => {
+    const correo = document.getElementById("miPerfilCorreo").value.trim();
+    const errEl = document.getElementById("miPerfilError");
+    errEl.style.display = "none";
+    const btn = document.getElementById("miPerfilSave");
+    btn.disabled = true;
+    apiPost("actualizarMiCorreo", { correo }).then(res => {
+      btn.disabled = false;
+      if(!res || !res.ok){
+        errEl.textContent = (res && res.error) || "No se pudo guardar el correo.";
+        errEl.style.display = "block";
+        return;
+      }
+      session.correo = res.correo;
+      const u = state.usuarios.find(x => x.usuario === session.usuario);
+      if(u) u.correo = res.correo;
+      toast_("Correo guardado. Se autocompletará cuando te elijan como líder.", "success");
+      closeMiPerfil_();
+    }).catch(() => {
+      btn.disabled = false;
+      errEl.textContent = "Error de conexión al guardar.";
+      errEl.style.display = "block";
+    });
+  });
 
   /* =====================================================================
      CIERRE DE SESIÓN POR INACTIVIDAD
@@ -1768,6 +1842,36 @@
     sel.innerHTML = opts.map(f => `<option value="${esc(f)}">${esc(f)}</option>`).join("");
   }
 
+  // Trae la lista de usuarios registrados (nombre + correo) para el selector
+  // de "Líder auditor". Así cada quien captura su correo UNA vez en "Mi
+  // perfil" y de ahí en adelante se autocompleta en cualquier auditoría.
+  function loadUsuarios_(){
+    if(!BACKEND_CONFIGURED) return;
+    apiGet("getUsuarios").then(res => {
+      if(res && res.ok) state.usuarios = res.usuarios || [];
+    }).catch(() => {});
+  }
+
+  function populateAudLiderSelect_(selectedNombre){
+    const sel = document.getElementById("audFLider");
+    const nombres = state.usuarios.map(u => u.nombre).filter(Boolean);
+    // Si el líder guardado (texto libre de antes) no coincide con ningún
+    // usuario registrado, lo agregamos como opción extra para no perder el dato.
+    if(selectedNombre && !nombres.includes(selectedNombre)) nombres.push(selectedNombre);
+    sel.innerHTML = "<option value=\"\">— Selecciona —</option>" +
+      nombres.map(n => `<option value="${esc(n)}">${esc(n)}</option>`).join("");
+    sel.value = selectedNombre || "";
+  }
+
+  // Al cambiar el líder seleccionado, autocompleta su correo desde el
+  // perfil guardado (si aún no lo ha capturado, el campo se deja en blanco
+  // y se puede escribir a mano esta vez).
+  document.getElementById("audFLider").addEventListener("change", () => {
+    const nombre = document.getElementById("audFLider").value;
+    const u = state.usuarios.find(x => x.nombre === nombre);
+    document.getElementById("audFLiderEmail").value = (u && u.correo) || "";
+  });
+
   function openAuditoriaModal_(id, presetDate){
     populateAudFranquiciaSelect_();
     audEditingId = id || null;
@@ -1782,7 +1886,7 @@
       document.getElementById("audFFecha").value = a.fecha || "";
       document.getElementById("audFTipo").value = a.tipo || "interna";
       document.getElementById("audFAlcance").value = a.alcance || "";
-      document.getElementById("audFLider").value = a.lider || "";
+      populateAudLiderSelect_(a.lider || "");
       document.getElementById("audFLiderEmail").value = a.liderEmail || "";
       document.getElementById("audFEstatus").value = a.estatus || "Programada";
       document.getElementById("audFNotas").value = a.notas || "";
@@ -1796,8 +1900,8 @@
       document.getElementById("audFFecha").value = presetDate || "";
       document.getElementById("audFTipo").value = "interna";
       document.getElementById("audFAlcance").value = "";
-      document.getElementById("audFLider").value = "";
-      document.getElementById("audFLiderEmail").value = "";
+      populateAudLiderSelect_((session && session.nombre) || "");
+      document.getElementById("audFLiderEmail").value = (session && session.correo) || "";
       document.getElementById("audFEstatus").value = "Programada";
       document.getElementById("audFNotas").value = "";
       document.getElementById("audFGCal").checked = false;
@@ -2015,7 +2119,8 @@
     nc: [...SEED_NC],
     archivos: [],
     franquiciaActiva: "",
-    auditorias: []
+    auditorias: [],
+    usuarios: []
   };
   let ncCounter = SEED_NC.length + 1;
 
