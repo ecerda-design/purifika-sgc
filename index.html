@@ -310,8 +310,12 @@
   /* ---------- Modal de Auditoría (crear/editar/eliminar evento del calendario) ---------- */
   #audModal{position:fixed;inset:0;background:rgba(20,30,32,.55);display:none;align-items:center;justify-content:center;z-index:9999;padding:24px;}
   #miPerfilModal{position:fixed;inset:0;background:rgba(20,30,32,.55);display:none;align-items:center;justify-content:center;z-index:9999;padding:24px;}
+  #pryModal{position:fixed;inset:0;background:rgba(20,30,32,.55);display:none;align-items:center;justify-content:center;z-index:9999;padding:24px;}
+  #tareaModal{position:fixed;inset:0;background:rgba(20,30,32,.55);display:none;align-items:center;justify-content:center;z-index:9999;padding:24px;}
   #audModal.show{display:flex;}
   #miPerfilModal.show{display:flex;}
+  #pryModal.show{display:flex;}
+  #tareaModal.show{display:flex;}
   .aud-modal-box{background:#fff;border-radius:12px;max-width:520px;width:100%;max-height:88vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.3);}
   .aud-modal-head{padding:18px 22px;border-bottom:1px solid var(--input-border);display:flex;align-items:center;justify-content:space-between;}
   .aud-modal-head h3{margin:0;font-family:var(--font-display);font-size:15px;color:var(--navy);}
@@ -474,6 +478,84 @@
     table.cl-table td:last-child::before{display:block;margin-bottom:5px;}
     table.cl-table td:last-child .obs-input{width:100%;}
   }
+
+  /* ===================== Proyectos ISO (tablero tipo Monday) ===================== */
+  .pry-toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:18px;}
+  .pry-toolbar select,.pry-toolbar input{height:32px;font-size:12px;font-family:var(--font-body);border:1px solid var(--input-border);border-radius:5px;padding:0 9px;background:#fff;color:var(--ink);min-width:0;box-sizing:border-box;}
+  .pry-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:26px;}
+  .pry-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:16px;cursor:pointer;transition:.15s;box-shadow:0 1px 2px rgba(20,30,40,.04);}
+  .pry-card:hover{border-color:var(--cyan);box-shadow:0 4px 14px rgba(20,30,40,.08);}
+  .pry-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px;}
+  .pry-card-dot{width:10px;height:10px;border-radius:50%;flex:none;margin-top:4px;}
+  .pry-card h4{margin:0;font-size:14px;font-family:var(--font-display);color:var(--navy);line-height:1.3;}
+  .pry-card-franq{font-size:10.5px;font-weight:800;color:var(--cyan-dark);background:#E7F8F9;border-radius:5px;padding:2px 7px;display:inline-block;margin-top:4px;}
+  .pry-card p{margin:8px 0 12px;font-size:11.5px;color:var(--ink-soft);line-height:1.4;min-height:15px;}
+  .pry-progress-bar{height:7px;border-radius:4px;background:#EEF1F4;overflow:hidden;margin-bottom:6px;}
+  .pry-progress-fill{height:100%;border-radius:4px;transition:width .25s;}
+  .pry-progress-label{display:flex;justify-content:space-between;font-size:10.5px;color:var(--ink-soft);font-weight:700;}
+  .pry-card-meta{display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);font-size:10.5px;color:var(--ink-soft);}
+  .pry-estado-badge{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.3px;padding:2px 7px;border-radius:10px;}
+  .pry-estado-badge.planeado{background:#EEF1F4;color:var(--ink-soft);}
+  .pry-estado-badge.enprogreso{background:#EAF3FF;color:#2D6FBD;}
+  .pry-estado-badge.bloqueado{background:#FBEAEA;color:var(--bad);}
+  .pry-estado-badge.completado{background:#E8F7EE;color:var(--ok);}
+  .pry-empty{padding:40px 20px;text-align:center;color:var(--ink-soft);font-size:12.5px;border:1.5px dashed var(--line);border-radius:var(--radius);}
+
+  .pry-detail-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:6px;}
+  .pry-back-link{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--cyan-dark);font-weight:700;cursor:pointer;margin-bottom:14px;}
+  .pry-back-link:hover{text-decoration:underline;}
+  .pry-week-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0 18px;}
+  .pry-week-tab{font-size:11.5px;font-weight:700;padding:6px 13px;border-radius:16px;border:1px solid var(--input-border);background:#fff;color:var(--ink-soft);cursor:pointer;}
+  .pry-week-tab.active{background:var(--navy);border-color:var(--navy);color:#fff;}
+
+  .kanban-board{display:grid;grid-template-columns:repeat(4,minmax(230px,1fr));gap:14px;overflow-x:auto;padding-bottom:6px;}
+  @media(max-width:900px){.kanban-board{grid-template-columns:1fr;}}
+  .kanban-col{background:#EEF1F4;border-radius:var(--radius);padding:10px;min-height:120px;}
+  .kanban-col-head{display:flex;align-items:center;justify-content:space-between;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.3px;color:var(--ink-soft);padding:4px 6px 10px;}
+  .kanban-col-head .n{background:#fff;border-radius:10px;padding:1px 8px;font-size:10.5px;}
+  .kanban-card{background:#fff;border-radius:8px;padding:10px 11px;margin-bottom:8px;box-shadow:0 1px 2px rgba(20,30,40,.06);border-left:3px solid var(--cyan);}
+  .kanban-card .t{font-size:12.5px;font-weight:700;color:var(--navy);margin-bottom:5px;line-height:1.3;}
+  .kanban-card .d{font-size:11px;color:var(--ink-soft);margin-bottom:7px;line-height:1.35;}
+  .kanban-card-meta{display:flex;align-items:center;justify-content:space-between;gap:6px;}
+  .kanban-card select{font-size:10.5px;height:24px;padding:0 4px;border:1px solid var(--input-border);border-radius:4px;max-width:108px;}
+  .kanban-card .resp{font-size:10px;color:var(--ink-soft);font-weight:700;}
+  .kanban-card .del-x{cursor:pointer;color:var(--ink-soft);font-size:14px;line-height:1;flex:none;}
+  .kanban-card .del-x:hover{color:var(--bad);}
+  .kanban-add-btn{width:100%;background:transparent;border:1.5px dashed var(--input-border);border-radius:8px;padding:8px;font-size:11.5px;color:var(--ink-soft);cursor:pointer;font-weight:700;}
+  .kanban-add-btn:hover{border-color:var(--cyan);color:var(--cyan-dark);}
+
+  /* ===================== Documentos Maestro ===================== */
+  .doc-count-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:20px;}
+  .doc-count-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;text-align:center;}
+  .doc-count-card .n{font-size:24px;font-weight:800;font-family:var(--font-display);color:var(--navy);}
+  .doc-count-card .l{font-size:11px;color:var(--ink-soft);font-weight:700;text-transform:uppercase;letter-spacing:.3px;margin-top:2px;}
+  .doc-toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:16px;}
+  .doc-toolbar select,.doc-toolbar input{height:32px;font-size:12px;font-family:var(--font-body);border:1px solid var(--input-border);border-radius:5px;padding:0 9px;background:#fff;color:var(--ink);min-width:0;box-sizing:border-box;}
+  .doc-type-badge{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.2px;padding:2px 8px;border-radius:10px;white-space:nowrap;}
+  .doc-type-badge.procedimiento{background:#EAF3FF;color:#2D6FBD;}
+  .doc-type-badge.bitácora{background:#FFF3E2;color:#B5760B;}
+  .doc-type-badge.matriz{background:#F3EAFB;color:#7B3FBD;}
+  .doc-type-badge.formato{background:#E8F7EE;color:var(--ok);}
+  .doc-type-badge.instructivo{background:#EEF1F4;color:var(--ink-soft);}
+  .doc-type-badge.manual{background:#FBEAEA;color:var(--bad);}
+  .doc-version-pill{font-size:10.5px;font-weight:800;color:var(--cyan-dark);background:#E7F8F9;border-radius:5px;padding:2px 7px;}
+
+  /* ===================== Comunicados (canal de difusión) ===================== */
+  .com-composer{display:flex;flex-direction:column;gap:10px;}
+  .com-composer-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  @media(max-width:640px){.com-composer-row{grid-template-columns:1fr;}}
+  .com-feed{display:flex;flex-direction:column;gap:12px;margin-top:6px;}
+  .com-item{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;position:relative;}
+  .com-item.tipo-documento{border-left:3px solid var(--cyan);}
+  .com-item.tipo-proyecto{border-left:3px solid #7B3FBD;}
+  .com-item.tipo-general{border-left:3px solid var(--ink-soft);}
+  .com-item-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px;}
+  .com-item-title{font-size:13.5px;font-weight:700;color:var(--navy);}
+  .com-item-tag{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.3px;padding:2px 7px;border-radius:10px;background:#EEF1F4;color:var(--ink-soft);white-space:nowrap;}
+  .com-item-msg{font-size:12.5px;color:var(--ink);line-height:1.5;margin-bottom:8px;}
+  .com-item-foot{display:flex;justify-content:space-between;align-items:center;font-size:10.5px;color:var(--ink-soft);}
+  .com-item-foot a{color:var(--cyan-dark);font-weight:700;text-decoration:none;}
+  .com-item-foot a:hover{text-decoration:underline;}
 </style>
 </head>
 <body>
@@ -647,6 +729,132 @@
   </div>
 </div>
 
+<div id="pryModal">
+  <div class="aud-modal-box">
+    <div class="aud-modal-head">
+      <h3 id="pryModalTitle">Nuevo proyecto</h3>
+      <button class="terms-box-close" id="pryModalCloseX" aria-label="Cerrar">&times;</button>
+    </div>
+    <div class="aud-modal-body">
+      <div class="aud-modal-error" id="pryModalError"></div>
+      <div>
+        <label>Nombre del proyecto</label>
+        <input type="text" id="pryFNombre" placeholder="Ej. Actualización SGC Franquicia MTY">
+      </div>
+      <div>
+        <label>Descripción</label>
+        <textarea id="pryFDescripcion" placeholder="Objetivo del proyecto..."></textarea>
+      </div>
+      <div class="aud-modal-row">
+        <div>
+          <label>Franquicia</label>
+          <input type="text" id="pryFFranquicia" placeholder="Ej. MTY, GDL, Todas">
+        </div>
+        <div>
+          <label>Responsable</label>
+          <input type="text" id="pryFResponsable" placeholder="Nombre">
+        </div>
+      </div>
+      <div class="aud-modal-row">
+        <div>
+          <label>Fecha de inicio</label>
+          <input type="date" id="pryFFechaInicio">
+        </div>
+        <div>
+          <label>Fecha límite</label>
+          <input type="date" id="pryFFechaLimite">
+        </div>
+      </div>
+      <div class="aud-modal-row">
+        <div>
+          <label>Estatus</label>
+          <select id="pryFEstado">
+            <option value="Planeado">Planeado</option>
+            <option value="En progreso">En progreso</option>
+            <option value="Bloqueado">Bloqueado</option>
+            <option value="Completado">Completado</option>
+          </select>
+        </div>
+        <div>
+          <label>Color</label>
+          <select id="pryFColor">
+            <option value="#2DBDC9">Cyan (Purifika)</option>
+            <option value="#7B3FBD">Morado</option>
+            <option value="#2D6FBD">Azul</option>
+            <option value="#E0A02E">Ámbar</option>
+            <option value="#3FA66B">Verde</option>
+            <option value="#C24A42">Rojo</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="aud-modal-foot">
+      <button class="btn-close2" id="pryModalDelete" style="display:none;color:var(--bad);">Eliminar proyecto</button>
+      <div style="display:flex;gap:10px;margin-left:auto;">
+        <button class="btn-close2" id="pryModalCancel">Cancelar</button>
+        <button class="btn-accept" id="pryModalSave">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="tareaModal">
+  <div class="aud-modal-box">
+    <div class="aud-modal-head">
+      <h3 id="tareaModalTitle">Nueva tarea</h3>
+      <button class="terms-box-close" id="tareaModalCloseX" aria-label="Cerrar">&times;</button>
+    </div>
+    <div class="aud-modal-body">
+      <div class="aud-modal-error" id="tareaModalError"></div>
+      <div>
+        <label>Título de la tarea</label>
+        <input type="text" id="tareaFTitulo" placeholder="Ej. Actualizar procedimiento de compras">
+      </div>
+      <div>
+        <label>Descripción</label>
+        <textarea id="tareaFDescripcion" placeholder="Detalle de la tarea..."></textarea>
+      </div>
+      <div class="aud-modal-row">
+        <div>
+          <label>Responsable</label>
+          <input type="text" id="tareaFResponsable" placeholder="Nombre">
+        </div>
+        <div>
+          <label>Fecha límite</label>
+          <input type="date" id="tareaFFechaLimite">
+        </div>
+      </div>
+      <div class="aud-modal-row">
+        <div>
+          <label>Semana</label>
+          <select id="tareaFSemana">
+            <option value="Semana 1">Semana 1</option>
+            <option value="Semana 2">Semana 2</option>
+            <option value="Semana 3">Semana 3</option>
+            <option value="Semana 4+">Semana 4+</option>
+          </select>
+        </div>
+        <div>
+          <label>Estatus</label>
+          <select id="tareaFEstado">
+            <option value="Por hacer">Por hacer</option>
+            <option value="En progreso">En progreso</option>
+            <option value="Bloqueado">Bloqueado</option>
+            <option value="Hecho">Hecho</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="aud-modal-foot">
+      <button class="btn-close2" id="tareaModalDelete" style="display:none;color:var(--bad);">Eliminar tarea</button>
+      <div style="display:flex;gap:10px;margin-left:auto;">
+        <button class="btn-close2" id="tareaModalCancel">Cancelar</button>
+        <button class="btn-accept" id="tareaModalSave">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="miPerfilModal">
   <div class="aud-modal-box" style="max-width:400px;">
     <div class="aud-modal-head">
@@ -768,7 +976,20 @@
           Auditoría del Sistema
         </button>
         <div id="calidadTabsContainer"></div>
+        <div class="sidebar-group-label">Gestión de Proyectos</div>
+        <button data-view="proyectos">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="7" height="7" rx="1.5"/><rect x="14" y="4" width="7" height="4" rx="1.5"/><rect x="14" y="11" width="7" height="9" rx="1.5"/><rect x="3" y="14" width="7" height="6" rx="1.5"/></svg>
+          Proyectos ISO
+        </button>
+        <button data-view="comunicados">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+          Comunicados <span class="tab-count" id="comCount">0</span>
+        </button>
         <div class="sidebar-group-label">Documentación</div>
+        <button data-view="documentos">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12h6M9 16h6M9 8h1"/><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/></svg>
+          Documentos Maestro
+        </button>
         <button data-view="procedimientos">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg>
           Biblioteca del SGC
@@ -1070,6 +1291,114 @@
             <span id="auditLogStatus" style="margin-left:12px;font-size:12px;color:var(--ink-soft);"></span>
           </div>
           <div id="auditLogTableWrap"></div>
+        </div>
+
+        <!-- ===================== PROYECTOS ISO (tablero tipo Monday) ===================== -->
+        <div class="view" id="view-proyectos">
+          <div id="pryListSection">
+            <h2 class="view-title">Proyectos ISO</h2>
+            <p class="view-sub">Seguimiento de proyectos para el cumplimiento de la ISO 9001:2015 en franquicias — actualización de procedimientos, preparación de auditorías y planes de mejora. Cada proyecto se organiza en tareas por semana, tipo tablero Monday.</p>
+
+            <div class="pry-toolbar">
+              <button class="btn btn-primary" id="pryNewBtn">+ Nuevo proyecto</button>
+              <select id="pryFiltroFranq"><option value="">Todas las franquicias</option></select>
+              <select id="pryFiltroEstado">
+                <option value="">Todos los estatus</option>
+                <option value="Planeado">Planeado</option>
+                <option value="En progreso">En progreso</option>
+                <option value="Bloqueado">Bloqueado</option>
+                <option value="Completado">Completado</option>
+              </select>
+            </div>
+
+            <div class="pry-grid" id="pryGrid"></div>
+          </div>
+
+          <div id="pryDetailSection" style="display:none;">
+            <span class="pry-back-link" id="pryBackLink">← Volver a Proyectos ISO</span>
+            <div class="pry-detail-head">
+              <div>
+                <h2 class="view-title" id="pryDetailTitle" style="margin-bottom:4px;"></h2>
+                <p class="view-sub" id="pryDetailSub" style="margin-bottom:0;"></p>
+              </div>
+              <button class="btn btn-ghost" id="pryEditBtn">Editar proyecto</button>
+            </div>
+
+            <div class="pry-progress-bar" style="max-width:420px;margin-top:14px;"><div class="pry-progress-fill" id="pryDetailProgressFill"></div></div>
+            <div class="pry-progress-label" style="max-width:420px;margin-bottom:16px;"><span id="pryDetailProgressLabel"></span><span id="pryDetailProgressPct"></span></div>
+
+            <div class="pry-week-tabs" id="pryWeekTabs"></div>
+
+            <button class="btn btn-primary" id="pryTareaNewBtn" style="margin-bottom:14px;">+ Nueva tarea</button>
+
+            <div class="kanban-board" id="pryKanban"></div>
+          </div>
+        </div>
+
+        <!-- ===================== DOCUMENTOS MAESTRO ===================== -->
+        <div class="view" id="view-documentos">
+          <h2 class="view-title">Lista Maestra de Documentos del SGC</h2>
+          <p class="view-sub">Control de bitácoras, procedimientos, matrices y formatos vigentes del Sistema de Gestión de Calidad, con su versión actual. Úsala para saber qué versión de un procedimiento (por ejemplo, Compras) está vigente antes de usarlo.</p>
+
+          <div class="doc-count-row" id="docCountRow"></div>
+
+          <div class="panel" style="margin-bottom:20px;">
+            <span class="form-code-badge">Alta / actualización de versión</span>
+            <div class="form-grid">
+              <div class="form-field"><label>Código</label><input type="text" id="docCodigo" placeholder="Ej. CIE-FM-PR-01"></div>
+              <div class="form-field full"><label>Nombre del documento</label><input type="text" id="docNombre" placeholder="Ej. Procedimiento de Compra e Importación"></div>
+              <div class="form-field"><label>Tipo</label>
+                <select id="docTipo"><option>Procedimiento</option><option>Bitácora</option><option>Matriz</option><option>Formato</option><option>Instructivo</option><option>Manual</option></select>
+              </div>
+              <div class="form-field"><label>Área / proceso</label><input type="text" id="docArea" placeholder="Ej. Comercialización de franquicias"></div>
+              <div class="form-field"><label>Versión actual</label><input type="text" id="docVersion" placeholder="Ej. 2.1"></div>
+              <div class="form-field"><label>Responsable</label><input type="text" id="docResponsable" placeholder="Nombre"></div>
+              <div class="form-field full"><label>Link de Drive (opcional)</label><input type="text" id="docDriveLink" placeholder="https://drive.google.com/..."></div>
+            </div>
+            <button class="btn btn-primary" id="docGuardar">Guardar documento</button>
+            <span id="docGuardarStatus" style="font-size:11.5px;color:var(--ink-soft);margin-left:10px;"></span>
+          </div>
+
+          <div class="panel">
+            <div class="doc-toolbar">
+              <input type="text" id="docBuscar" placeholder="Buscar por código o nombre...">
+              <select id="docFiltroTipo">
+                <option value="">Todos los tipos</option>
+                <option value="Procedimiento">Procedimientos</option>
+                <option value="Bitácora">Bitácoras</option>
+                <option value="Matriz">Matrices</option>
+                <option value="Formato">Formatos</option>
+                <option value="Instructivo">Instructivos</option>
+                <option value="Manual">Manuales</option>
+              </select>
+            </div>
+            <div class="nc-table-wrap" id="docTableWrap"></div>
+          </div>
+        </div>
+
+        <!-- ===================== COMUNICADOS (canal de difusión) ===================== -->
+        <div class="view" id="view-comunicados">
+          <h2 class="view-title">Comunicados</h2>
+          <p class="view-sub">Canal de difusión del SGC: avisa aquí cuando se actualice la versión de un procedimiento, o comparte novedades de un proyecto. Todo el equipo ve el mismo feed, ordenado del más reciente al más antiguo.</p>
+
+          <div class="panel" style="margin-bottom:20px;">
+            <div class="com-composer">
+              <input type="text" id="comTitulo" placeholder="Título del comunicado (ej. Nueva versión del procedimiento de Compras)">
+              <textarea id="comMensaje" placeholder="Mensaje..." style="font-family:var(--font-body);font-size:12.5px;border:1px solid var(--input-border);border-radius:5px;padding:8px 10px;min-height:70px;resize:vertical;"></textarea>
+              <div class="com-composer-row">
+                <select id="comTipo"><option value="General">General</option><option value="Documento actualizado">Documento actualizado</option><option value="Proyecto">Proyecto</option></select>
+                <input type="text" id="comDocCodigo" placeholder="Código de documento (opcional, ej. CIE-FM-PR-01)">
+              </div>
+              <div class="com-composer-row">
+                <input type="text" id="comVersionNueva" placeholder="Versión nueva (opcional, ej. 2.1)">
+                <input type="text" id="comDriveLink" placeholder="Link de Drive (opcional)">
+              </div>
+              <div><button class="btn btn-primary" id="comPublicar">Publicar comunicado</button>
+              <span id="comPublicarStatus" style="font-size:11.5px;color:var(--ink-soft);margin-left:10px;"></span></div>
+            </div>
+          </div>
+
+          <div class="com-feed" id="comFeed"></div>
         </div>
 
       </main>
@@ -2120,7 +2449,11 @@
     archivos: [],
     franquiciaActiva: "",
     auditorias: [],
-    usuarios: []
+    usuarios: [],
+    proyectos: [],
+    tareas: [],
+    documentos: [],
+    comunicados: []
   };
   let ncCounter = SEED_NC.length + 1;
 
@@ -2165,7 +2498,7 @@
   const labels = {inicio:"Inicio", diario:"Check List Diario", semanal:"Check List Semanal", mensual:"Check List Mensual",
     noconformidades:"No Conformidades", subirreporte:"Subir Reporte", procedimientos:"Biblioteca del SGC", reportes:"Reportes",
     indicadores:"Indicadores del SGC", auditorias:"Calendario de Auditorías", micalidad:"Mi módulo de Calidad",
-    auditlog:"Auditoría del Sistema"};
+    auditlog:"Auditoría del Sistema", proyectos:"Proyectos ISO", documentos:"Documentos Maestro", comunicados:"Comunicados"};
 
   function goto(view, extra){
     views.forEach(v => v.classList.toggle("active", v.id === "view-" + view));
@@ -2179,6 +2512,9 @@
     if(view === "auditorias") renderAuditorias();
     if(view === "micalidad") renderMiCalidad(extra);
     if(view === "auditlog") renderAuditLog();
+    if(view === "proyectos"){ pryShowList_(); cargarProyectos_(); }
+    if(view === "documentos") cargarDocumentos_();
+    if(view === "comunicados") cargarComunicados_();
   }
   navTabsEl.addEventListener("click", (e) => {
     const btn = e.target.closest("button[data-view]");
@@ -2770,6 +3106,450 @@
   renderLibByArea();
   renderLibByIso();
   renderDashboard();
+
+  /* =====================================================================
+     PROYECTOS ISO — tablero tipo Monday, con avance visual por proyecto.
+     COMUNICADOS — canal de difusión de últimas versiones/novedades.
+     DOCUMENTOS MAESTRO — lista maestra con conteo por tipo y versión vigente.
+     ===================================================================== */
+
+  const PRY_ESTADOS = ["Planeado","En progreso","Bloqueado","Completado"];
+  const TAREA_ESTADOS = ["Por hacer","En progreso","Bloqueado","Hecho"];
+  const PRY_SEMANAS = ["Semana 1","Semana 2","Semana 3","Semana 4+"];
+  let pryActivoId = null;
+  let prySemanaActiva = "Semana 1";
+  let pryEditingId = null;
+  let tareaEditingId = null;
+
+  function pryEstadoClass_(estado){
+    return "pry-estado-badge " + String(estado||"").toLowerCase().replace(/\s+/g,"");
+  }
+
+  function cargarProyectos_(){
+    apiGet("getProyectos").then(res => {
+      if(!res || !res.ok) return;
+      state.proyectos = res.proyectos || [];
+      state.tareas = res.tareas || [];
+      pryPoblarFiltroFranquicia_();
+      if(pryActivoId) renderPryDetail_(pryActivoId); else renderPryGrid_();
+    }).catch(()=>{});
+  }
+
+  function pryPoblarFiltroFranquicia_(){
+    const sel = document.getElementById("pryFiltroFranq");
+    const actuales = new Set(Array.from(sel.options).map(o=>o.value));
+    const franqs = Array.from(new Set(state.proyectos.map(p=>p.Franquicia).filter(Boolean)));
+    franqs.forEach(f => {
+      if(!actuales.has(f)){ const o=document.createElement("option"); o.value=f; o.textContent=f; sel.appendChild(o); }
+    });
+  }
+
+  function renderPryGrid_(){
+    const grid = document.getElementById("pryGrid");
+    const fFranq = document.getElementById("pryFiltroFranq").value;
+    const fEstado = document.getElementById("pryFiltroEstado").value;
+    let lista = state.proyectos.slice();
+    if(fFranq) lista = lista.filter(p => p.Franquicia === fFranq);
+    if(fEstado) lista = lista.filter(p => p.Estado === fEstado);
+
+    if(!lista.length){
+      grid.innerHTML = "<div class=\"pry-empty\" style=\"grid-column:1/-1;\">Todavía no hay proyectos" + (fFranq||fEstado ? " con ese filtro." : ". Crea el primero con \"+ Nuevo proyecto\".") + "</div>";
+      return;
+    }
+    grid.innerHTML = lista.map(p => {
+      const color = p.Color || "#2DBDC9";
+      return `<div class="pry-card" data-id="${esc(p.ID)}">
+        <div class="pry-card-top">
+          <div>
+            <h4>${esc(p.Nombre)}</h4>
+            ${p.Franquicia ? `<span class="pry-card-franq">${esc(p.Franquicia)}</span>` : ""}
+          </div>
+          <div class="pry-card-dot" style="background:${esc(color)};"></div>
+        </div>
+        <p>${esc(p.Descripcion || "")}</p>
+        <div class="pry-progress-bar"><div class="pry-progress-fill" style="width:${p.avance||0}%;background:${esc(color)};"></div></div>
+        <div class="pry-progress-label"><span>${p.tareasHechas||0} de ${p.totalTareas||0} tareas</span><span>${p.avance||0}%</span></div>
+        <div class="pry-card-meta">
+          <span class="${pryEstadoClass_(p.Estado)}">${esc(p.Estado||"Planeado")}</span>
+          <span>${p.FechaLimite ? "Límite: " + esc(p.FechaLimite) : ""}</span>
+        </div>
+      </div>`;
+    }).join("");
+    grid.querySelectorAll(".pry-card").forEach(card => {
+      card.addEventListener("click", () => { pryActivoId = card.dataset.id; renderPryDetail_(pryActivoId); });
+    });
+  }
+  document.getElementById("pryFiltroFranq").addEventListener("change", renderPryGrid_);
+  document.getElementById("pryFiltroEstado").addEventListener("change", renderPryGrid_);
+
+  function pryShowList_(){
+    pryActivoId = null;
+    document.getElementById("pryListSection").style.display = "";
+    document.getElementById("pryDetailSection").style.display = "none";
+  }
+  document.getElementById("pryBackLink").addEventListener("click", pryShowList_);
+
+  function renderPryDetail_(id){
+    const p = state.proyectos.find(x => x.ID === id);
+    if(!p){ pryShowList_(); return; }
+    document.getElementById("pryListSection").style.display = "none";
+    document.getElementById("pryDetailSection").style.display = "";
+    document.getElementById("pryDetailTitle").textContent = p.Nombre;
+    document.getElementById("pryDetailSub").textContent = (p.Descripcion || "") + (p.Franquicia ? "  ·  Franquicia: " + p.Franquicia : "") + (p.Responsable ? "  ·  Responsable: " + p.Responsable : "");
+    const color = p.Color || "#2DBDC9";
+    document.getElementById("pryDetailProgressFill").style.background = color;
+    document.getElementById("pryDetailProgressFill").style.width = (p.avance||0) + "%";
+    document.getElementById("pryDetailProgressLabel").textContent = (p.tareasHechas||0) + " de " + (p.totalTareas||0) + " tareas completadas";
+    document.getElementById("pryDetailProgressPct").textContent = (p.avance||0) + "%";
+
+    const weekTabs = document.getElementById("pryWeekTabs");
+    weekTabs.innerHTML = PRY_SEMANAS.map(s => `<button class="pry-week-tab${s===prySemanaActiva?" active":""}" data-semana="${esc(s)}">${esc(s)}</button>`).join("")
+      + `<button class="pry-week-tab${prySemanaActiva==="__todas__"?" active":""}" data-semana="__todas__">Todas</button>`;
+    weekTabs.querySelectorAll(".pry-week-tab").forEach(btn => {
+      btn.addEventListener("click", () => { prySemanaActiva = btn.dataset.semana; renderPryDetail_(id); });
+    });
+
+    renderKanban_(id);
+  }
+
+  function renderKanban_(proyectoId){
+    const board = document.getElementById("pryKanban");
+    let tareas = state.tareas.filter(t => t.ProyectoID === proyectoId);
+    if(prySemanaActiva !== "__todas__") tareas = tareas.filter(t => (t.Semana || "Semana 1") === prySemanaActiva);
+
+    board.innerHTML = TAREA_ESTADOS.map(estado => {
+      const enCol = tareas.filter(t => (t.Estado || "Por hacer") === estado);
+      return `<div class="kanban-col" data-estado="${esc(estado)}">
+        <div class="kanban-col-head"><span>${esc(estado)}</span><span class="n">${enCol.length}</span></div>
+        ${enCol.map(t => `
+          <div class="kanban-card" data-id="${esc(t.ID)}">
+            <div class="t">${esc(t.Titulo)}</div>
+            ${t.Descripcion ? `<div class="d">${esc(t.Descripcion)}</div>` : ""}
+            <div class="kanban-card-meta">
+              <select class="kt-estado" data-id="${esc(t.ID)}">
+                ${TAREA_ESTADOS.map(es => `<option value="${esc(es)}" ${es===estado?"selected":""}>${esc(es)}</option>`).join("")}
+              </select>
+              <span class="del-x" data-id="${esc(t.ID)}" title="Eliminar tarea">✕</span>
+            </div>
+            ${t.Responsable ? `<div class="resp" style="margin-top:5px;">${esc(t.Responsable)}${t.FechaLimite ? " · " + esc(t.FechaLimite) : ""}</div>` : ""}
+          </div>`).join("")}
+        <button class="kanban-add-btn" data-estado="${esc(estado)}">+ Agregar tarea</button>
+      </div>`;
+    }).join("");
+
+    board.querySelectorAll(".kanban-add-btn").forEach(btn => {
+      btn.addEventListener("click", () => openTareaModal_(null, btn.dataset.estado));
+    });
+    board.querySelectorAll(".kanban-card").forEach(card => {
+      card.addEventListener("click", (e) => {
+        if(e.target.closest(".kt-estado") || e.target.closest(".del-x")) return;
+        openTareaModal_(card.dataset.id);
+      });
+    });
+    board.querySelectorAll(".kt-estado").forEach(sel => {
+      sel.addEventListener("click", e => e.stopPropagation());
+      sel.addEventListener("change", async () => {
+        const t = state.tareas.find(x => x.ID === sel.dataset.id);
+        if(!t) return;
+        const res = await apiPost("saveTarea", { id: t.ID, proyectoId: t.ProyectoID, titulo: t.Titulo, descripcion: t.Descripcion, estado: sel.value, responsable: t.Responsable, fechaLimite: t.FechaLimite, semana: t.Semana });
+        if(res && res.ok) cargarProyectos_();
+      });
+    });
+    board.querySelectorAll(".del-x").forEach(x => {
+      x.addEventListener("click", async (e) => {
+        e.stopPropagation();
+        const ok = await confirmDialog_("¿Eliminar esta tarea? No se puede deshacer.");
+        if(!ok) return;
+        const res = await apiPost("deleteTarea", { id: x.dataset.id });
+        if(res && res.ok) cargarProyectos_();
+      });
+    });
+  }
+
+  /* ---------- Modal Proyecto ---------- */
+  document.getElementById("pryNewBtn").addEventListener("click", () => openPryModal_(null));
+  document.getElementById("pryEditBtn").addEventListener("click", () => openPryModal_(pryActivoId));
+  function openPryModal_(id){
+    pryEditingId = id;
+    const errEl = document.getElementById("pryModalError"); errEl.style.display = "none"; errEl.textContent = "";
+    if(id){
+      const p = state.proyectos.find(x => x.ID === id);
+      document.getElementById("pryModalTitle").textContent = "Editar proyecto";
+      document.getElementById("pryFNombre").value = p.Nombre || "";
+      document.getElementById("pryFDescripcion").value = p.Descripcion || "";
+      document.getElementById("pryFFranquicia").value = p.Franquicia || "";
+      document.getElementById("pryFResponsable").value = p.Responsable || "";
+      document.getElementById("pryFFechaInicio").value = p.FechaInicio || "";
+      document.getElementById("pryFFechaLimite").value = p.FechaLimite || "";
+      document.getElementById("pryFEstado").value = p.Estado || "Planeado";
+      document.getElementById("pryFColor").value = p.Color || "#2DBDC9";
+      document.getElementById("pryModalDelete").style.display = "";
+    } else {
+      document.getElementById("pryModalTitle").textContent = "Nuevo proyecto";
+      ["pryFNombre","pryFDescripcion","pryFFranquicia","pryFResponsable","pryFFechaInicio","pryFFechaLimite"].forEach(k => document.getElementById(k).value = "");
+      document.getElementById("pryFEstado").value = "Planeado";
+      document.getElementById("pryFColor").value = "#2DBDC9";
+      document.getElementById("pryModalDelete").style.display = "none";
+    }
+    document.getElementById("pryModal").classList.add("show");
+  }
+  function closePryModal_(){ document.getElementById("pryModal").classList.remove("show"); }
+  document.getElementById("pryModalCloseX").addEventListener("click", closePryModal_);
+  document.getElementById("pryModalCancel").addEventListener("click", closePryModal_);
+  document.getElementById("pryModal").addEventListener("click", e => { if(e.target.id === "pryModal") closePryModal_(); });
+
+  document.getElementById("pryModalSave").addEventListener("click", async () => {
+    const errEl = document.getElementById("pryModalError");
+    const nombre = document.getElementById("pryFNombre").value.trim();
+    if(!nombre){ errEl.textContent = "El nombre del proyecto es obligatorio."; errEl.style.display = ""; return; }
+    const btn = document.getElementById("pryModalSave");
+    btn.disabled = true; btn.textContent = "Guardando...";
+    try{
+      const res = await apiPost("saveProyecto", {
+        id: pryEditingId || undefined,
+        nombre, descripcion: document.getElementById("pryFDescripcion").value.trim(),
+        franquicia: document.getElementById("pryFFranquicia").value.trim(),
+        responsable: document.getElementById("pryFResponsable").value.trim(),
+        fechaInicio: document.getElementById("pryFFechaInicio").value,
+        fechaLimite: document.getElementById("pryFFechaLimite").value,
+        estado: document.getElementById("pryFEstado").value,
+        color: document.getElementById("pryFColor").value
+      });
+      if(!res || !res.ok){ errEl.textContent = (res && res.error) || "No se pudo guardar."; errEl.style.display = ""; return; }
+      closePryModal_();
+      const wasNew = !pryEditingId;
+      if(wasNew) pryActivoId = res.id;
+      await cargarProyectosPromise_();
+      if(wasNew) renderPryDetail_(pryActivoId);
+    } finally { btn.disabled = false; btn.textContent = "Guardar"; }
+  });
+  document.getElementById("pryModalDelete").addEventListener("click", async () => {
+    if(!pryEditingId) return;
+    const ok = await confirmDialog_("¿Eliminar este proyecto y todas sus tareas? No se puede deshacer.");
+    if(!ok) return;
+    const res = await apiPost("deleteProyecto", { id: pryEditingId });
+    if(res && res.ok){ closePryModal_(); pryShowList_(); cargarProyectos_(); }
+  });
+  function cargarProyectosPromise_(){
+    return apiGet("getProyectos").then(res => {
+      if(!res || !res.ok) return;
+      state.proyectos = res.proyectos || [];
+      state.tareas = res.tareas || [];
+      pryPoblarFiltroFranquicia_();
+    }).catch(()=>{});
+  }
+
+  /* ---------- Modal Tarea ---------- */
+  document.getElementById("pryTareaNewBtn").addEventListener("click", () => openTareaModal_(null));
+  function openTareaModal_(id, estadoInicial){
+    tareaEditingId = id;
+    const errEl = document.getElementById("tareaModalError"); errEl.style.display = "none"; errEl.textContent = "";
+    if(id){
+      const t = state.tareas.find(x => x.ID === id);
+      document.getElementById("tareaModalTitle").textContent = "Editar tarea";
+      document.getElementById("tareaFTitulo").value = t.Titulo || "";
+      document.getElementById("tareaFDescripcion").value = t.Descripcion || "";
+      document.getElementById("tareaFResponsable").value = t.Responsable || "";
+      document.getElementById("tareaFFechaLimite").value = t.FechaLimite || "";
+      document.getElementById("tareaFSemana").value = t.Semana || "Semana 1";
+      document.getElementById("tareaFEstado").value = t.Estado || "Por hacer";
+      document.getElementById("tareaModalDelete").style.display = "";
+    } else {
+      document.getElementById("tareaModalTitle").textContent = "Nueva tarea";
+      ["tareaFTitulo","tareaFDescripcion","tareaFResponsable","tareaFFechaLimite"].forEach(k => document.getElementById(k).value = "");
+      document.getElementById("tareaFSemana").value = prySemanaActiva !== "__todas__" ? prySemanaActiva : "Semana 1";
+      document.getElementById("tareaFEstado").value = estadoInicial || "Por hacer";
+      document.getElementById("tareaModalDelete").style.display = "none";
+    }
+    document.getElementById("tareaModal").classList.add("show");
+  }
+  function closeTareaModal_(){ document.getElementById("tareaModal").classList.remove("show"); }
+  document.getElementById("tareaModalCloseX").addEventListener("click", closeTareaModal_);
+  document.getElementById("tareaModalCancel").addEventListener("click", closeTareaModal_);
+  document.getElementById("tareaModal").addEventListener("click", e => { if(e.target.id === "tareaModal") closeTareaModal_(); });
+
+  document.getElementById("tareaModalSave").addEventListener("click", async () => {
+    const errEl = document.getElementById("tareaModalError");
+    const titulo = document.getElementById("tareaFTitulo").value.trim();
+    if(!titulo){ errEl.textContent = "El título de la tarea es obligatorio."; errEl.style.display = ""; return; }
+    if(!pryActivoId){ errEl.textContent = "No hay proyecto activo."; errEl.style.display = ""; return; }
+    const btn = document.getElementById("tareaModalSave");
+    btn.disabled = true; btn.textContent = "Guardando...";
+    try{
+      const res = await apiPost("saveTarea", {
+        id: tareaEditingId || undefined,
+        proyectoId: pryActivoId, titulo,
+        descripcion: document.getElementById("tareaFDescripcion").value.trim(),
+        responsable: document.getElementById("tareaFResponsable").value.trim(),
+        fechaLimite: document.getElementById("tareaFFechaLimite").value,
+        semana: document.getElementById("tareaFSemana").value,
+        estado: document.getElementById("tareaFEstado").value
+      });
+      if(!res || !res.ok){ errEl.textContent = (res && res.error) || "No se pudo guardar."; errEl.style.display = ""; return; }
+      closeTareaModal_();
+      cargarProyectos_();
+    } finally { btn.disabled = false; btn.textContent = "Guardar"; }
+  });
+  document.getElementById("tareaModalDelete").addEventListener("click", async () => {
+    if(!tareaEditingId) return;
+    const ok = await confirmDialog_("¿Eliminar esta tarea? No se puede deshacer.");
+    if(!ok) return;
+    const res = await apiPost("deleteTarea", { id: tareaEditingId });
+    if(res && res.ok){ closeTareaModal_(); cargarProyectos_(); }
+  });
+
+  /* =====================================================================
+     DOCUMENTOS MAESTRO
+     ===================================================================== */
+  function cargarDocumentos_(){
+    apiGet("getDocumentos").then(res => {
+      if(!res || !res.ok) return;
+      state.documentos = res.documentos || [];
+      renderDocumentos_();
+    }).catch(()=>{});
+  }
+
+  function renderDocCounts_(lista){
+    const tipos = ["Procedimiento","Bitácora","Matriz","Formato","Instructivo","Manual"];
+    const row = document.getElementById("docCountRow");
+    const cards = [`<div class="doc-count-card"><div class="n">${lista.length}</div><div class="l">Total documentos</div></div>`]
+      .concat(tipos.map(t => {
+        const n = lista.filter(d => d.Tipo === t).length;
+        return n ? `<div class="doc-count-card"><div class="n">${n}</div><div class="l">${esc(t)}${n===1?"":"s"}</div></div>` : "";
+      }).filter(Boolean));
+    row.innerHTML = cards.join("");
+  }
+
+  function renderDocumentos_(){
+    const buscar = (document.getElementById("docBuscar").value || "").toLowerCase().trim();
+    const fTipo = document.getElementById("docFiltroTipo").value;
+    let lista = state.documentos.slice();
+    renderDocCounts_(lista);
+    if(fTipo) lista = lista.filter(d => d.Tipo === fTipo);
+    if(buscar) lista = lista.filter(d => (d.Codigo||"").toLowerCase().includes(buscar) || (d.Nombre||"").toLowerCase().includes(buscar));
+    lista.sort((a,b) => (a.Codigo||"").localeCompare(b.Codigo||""));
+
+    const wrap = document.getElementById("docTableWrap");
+    if(!lista.length){
+      wrap.innerHTML = "<p style=\"font-size:12.5px;color:var(--ink-soft);\">No hay documentos que coincidan.</p>";
+      return;
+    }
+    const rows = lista.map(d => {
+      const tipoClass = "doc-type-badge " + String(d.Tipo||"").toLowerCase();
+      const link = d.DriveLink ? `<a href="${esc(d.DriveLink)}" target="_blank" rel="noopener" style="color:var(--cyan-dark);font-weight:700;">Ver en Drive</a>` : "";
+      return `<tr>
+        <td><b>${esc(d.Codigo)}</b></td>
+        <td>${esc(d.Nombre)}</td>
+        <td><span class="${tipoClass}">${esc(d.Tipo)}</span></td>
+        <td>${esc(d.Area||"")}</td>
+        <td><span class="doc-version-pill">v${esc(d.VersionActual||"1.0")}</span></td>
+        <td>${esc(d.FechaVersion||"")}</td>
+        <td>${esc(d.Responsable||"")}</td>
+        <td>${link} <span class="del-x" data-id="${esc(d.ID)}" title="Eliminar" style="cursor:pointer;color:var(--ink-soft);margin-left:8px;">✕</span></td>
+      </tr>`;
+    }).join("");
+    wrap.innerHTML = `<table class="nc-table"><thead><tr><th>Código</th><th>Nombre</th><th>Tipo</th><th>Área</th><th>Versión</th><th>Fecha versión</th><th>Responsable</th><th>Drive</th></tr></thead><tbody>${rows}</tbody></table>`;
+    wrap.querySelectorAll(".del-x").forEach(x => {
+      x.addEventListener("click", async () => {
+        const ok = await confirmDialog_("¿Eliminar este documento de la lista maestra?");
+        if(!ok) return;
+        const res = await apiPost("deleteDocumento", { id: x.dataset.id });
+        if(res && res.ok) cargarDocumentos_();
+      });
+    });
+  }
+  document.getElementById("docBuscar").addEventListener("input", renderDocumentos_);
+  document.getElementById("docFiltroTipo").addEventListener("change", renderDocumentos_);
+
+  document.getElementById("docGuardar").addEventListener("click", async () => {
+    const status = document.getElementById("docGuardarStatus");
+    const codigo = document.getElementById("docCodigo").value.trim();
+    const nombre = document.getElementById("docNombre").value.trim();
+    if(!codigo || !nombre){ status.textContent = "Código y nombre son obligatorios."; return; }
+    status.textContent = "Guardando...";
+    const existente = state.documentos.find(d => d.Codigo === codigo);
+    const res = await apiPost("saveDocumento", {
+      id: existente ? existente.ID : undefined,
+      codigo, nombre,
+      tipo: document.getElementById("docTipo").value,
+      area: document.getElementById("docArea").value.trim(),
+      versionActual: document.getElementById("docVersion").value.trim() || "1.0",
+      responsable: document.getElementById("docResponsable").value.trim(),
+      driveLink: document.getElementById("docDriveLink").value.trim()
+    });
+    if(res && res.ok){
+      status.textContent = existente ? "Versión actualizada." : "Documento agregado.";
+      ["docCodigo","docNombre","docArea","docVersion","docResponsable","docDriveLink"].forEach(k => document.getElementById(k).value = "");
+      cargarDocumentos_();
+    } else {
+      status.textContent = (res && res.error) || "No se pudo guardar.";
+    }
+  });
+
+  /* =====================================================================
+     COMUNICADOS — canal de difusión
+     ===================================================================== */
+  function cargarComunicados_(){
+    apiGet("getComunicados").then(res => {
+      if(!res || !res.ok) return;
+      state.comunicados = res.comunicados || [];
+      renderComunicados_();
+      const badge = document.getElementById("comCount");
+      if(badge) badge.textContent = state.comunicados.length;
+    }).catch(()=>{});
+  }
+
+  function renderComunicados_(){
+    const feed = document.getElementById("comFeed");
+    if(!state.comunicados.length){
+      feed.innerHTML = "<div class=\"pry-empty\">Todavía no hay comunicados. Publica el primero arriba.</div>";
+      return;
+    }
+    feed.innerHTML = state.comunicados.map(c => {
+      const tipoClass = "tipo-" + String(c.Tipo||"General").toLowerCase().replace(/\s+/g,"");
+      const fecha = c.Timestamp ? new Date(c.Timestamp).toLocaleString("es-MX") : (c.Fecha||"");
+      let extra = "";
+      if(c.DocumentoCodigo) extra += `<b>${esc(c.DocumentoCodigo)}</b>`;
+      if(c.VersionNueva) extra += (extra?" · ":"") + `nueva versión: v${esc(c.VersionNueva)}`;
+      return `<div class="com-item ${tipoClass}">
+        <div class="com-item-head">
+          <span class="com-item-title">${esc(c.Titulo)}</span>
+          <span class="com-item-tag">${esc(c.Tipo||"General")}</span>
+        </div>
+        <div class="com-item-msg">${esc(c.Mensaje||"")}</div>
+        <div class="com-item-foot">
+          <span>${esc(c.Autor||"")} · ${esc(fecha)}${extra ? " · " + extra : ""}</span>
+          ${c.DriveLink ? `<a href="${esc(c.DriveLink)}" target="_blank" rel="noopener">Ver documento</a>` : ""}
+        </div>
+      </div>`;
+    }).join("");
+  }
+
+  document.getElementById("comPublicar").addEventListener("click", async () => {
+    const status = document.getElementById("comPublicarStatus");
+    const titulo = document.getElementById("comTitulo").value.trim();
+    const mensaje = document.getElementById("comMensaje").value.trim();
+    if(!titulo || !mensaje){ status.textContent = "Título y mensaje son obligatorios."; return; }
+    status.textContent = "Publicando...";
+    const res = await apiPost("saveComunicado", {
+      titulo, mensaje,
+      tipo: document.getElementById("comTipo").value,
+      documentoCodigo: document.getElementById("comDocCodigo").value.trim(),
+      versionNueva: document.getElementById("comVersionNueva").value.trim(),
+      driveLink: document.getElementById("comDriveLink").value.trim()
+    });
+    if(res && res.ok){
+      status.textContent = "Publicado.";
+      ["comTitulo","comMensaje","comDocCodigo","comVersionNueva","comDriveLink"].forEach(k => document.getElementById(k).value = "");
+      document.getElementById("comTipo").value = "General";
+      cargarComunicados_();
+    } else {
+      status.textContent = (res && res.error) || "No se pudo publicar.";
+    }
+  });
+
+  // Carga inicial silenciosa del contador de Comunicados en el menú (si ya hay sesión activa)
+  if(typeof session !== "undefined" && session && session.token) cargarComunicados_();
 
 })();
 </script>
