@@ -748,7 +748,7 @@
       <div class="aud-modal-row">
         <div>
           <label>Franquicia</label>
-          <input type="text" id="pryFFranquicia" placeholder="Ej. MTY, GDL, Todas">
+          <select id="pryFFranquicia"><option value="">Selecciona…</option></select>
         </div>
         <div>
           <label>Responsable</label>
@@ -1112,7 +1112,7 @@
               <div class="form-field"><label>Procedencia de la AC</label>
                 <select id="ncProcedencia"><option>Interna</option><option>Externa</option></select>
               </div>
-              <div class="form-field"><label>Franquicia</label><input type="text" id="ncFranquicia" placeholder="Ej. MTY, GDL, SGC (matriz)"></div>
+              <div class="form-field"><label>Franquicia</label><select id="ncFranquicia"><option value="">Selecciona…</option></select></div>
               <div class="form-field"><label>Nombre del cliente/proveedor que impacta</label><input type="text" id="ncCliente" placeholder="Cliente, proveedor o SGC"></div>
               <div class="form-field"><label>Proceso responsable</label>
                 <select id="ncProc"></select>
@@ -1754,6 +1754,21 @@
     sel.innerHTML = `<option value="">— Todas —</option>` +
       FRANQUICIAS_CLAVE_PORTAL.map(c => `<option>${esc(c)}</option>`).join("");
   })();
+
+  /* ---------- Selects de clave de franquicia reutilizables ----------
+     Mismo listado (FRANQUICIAS_CLAVE_PORTAL) que usa el filtro de admin
+     "CLAVE (PORTAL)", para que en todo el sistema se elija la franquicia
+     de una lista en vez de escribirla a mano. extraOptions permite
+     agregar opciones especiales al inicio (ej. "SGC (matriz)", "Todas"). */
+  function fillFranquiciaClaveSelect_(selId, extraOptions){
+    const sel = document.getElementById(selId);
+    if(!sel) return;
+    const extras = (extraOptions || []).map(o => `<option>${esc(o)}</option>`).join("");
+    sel.innerHTML = `<option value="">Selecciona…</option>` + extras +
+      FRANQUICIAS_CLAVE_PORTAL.map(c => `<option>${esc(c)}</option>`).join("");
+  }
+  fillFranquiciaClaveSelect_("ncFranquicia", ["SGC (matriz)"]);
+  fillFranquiciaClaveSelect_("pryFFranquicia", ["Todas"]);
 
   /* =====================================================================
      INDICADORES — 36 indicadores reales, transcritos del tablero
