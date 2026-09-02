@@ -385,7 +385,7 @@
   .app-shell.session-active{display:block;}
 
   .session-chip{display:flex;align-items:center;gap:8px;color:#fff;font-size:11.5px;}
-  .session-chip .avatar{width:28px;height:28px;border-radius:50%;background:var(--cyan);color:#0b3438;font-weight:800;
+  .session-chip .avatar{width:28px;height:28px;border-radius:50%;background:var(--cyan);color:#fff;font-weight:800;
     display:flex;align-items:center;justify-content:center;font-size:11px;flex:none;overflow:hidden;}
   .session-chip .avatar img{width:100%;height:100%;object-fit:cover;}
   .session-chip .role-tag{background:rgba(255,255,255,.18);border-radius:20px;padding:1px 8px;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.3px;}
@@ -399,8 +399,15 @@
   .session-menu-text span:first-child{font-size:12px;font-weight:700;color:#fff;white-space:nowrap;}
   .session-menu-btn .chevron{width:13px;height:13px;color:rgba(255,255,255,.6);flex:none;transition:transform .18s;}
   .session-menu.open .session-menu-btn .chevron{transform:rotate(180deg);}
-  .session-dropdown{position:absolute;top:calc(100% + 8px);right:0;background:#fff;border-radius:10px;min-width:200px;
-    box-shadow:0 12px 32px rgba(10,16,22,.24);border:1px solid var(--line);padding:6px;display:none;z-index:200;}
+  /* position:fixed (NO absolute) a propósito: el topbar tiene overflow:hidden
+     en varios contenedores para que el texto largo no se desborde, y eso
+     recortaba este menú si era "absolute" (quedaba invisible o cortado).
+     Con "fixed" + coordenadas calculadas en JS (ver sessionMenuBtn click),
+     el menú se posiciona respecto a la ventana, nunca lo recorta ningún
+     contenedor padre. Aplica este mismo patrón a cualquier menú/desplegable
+     flotante futuro que viva dentro de una barra con overflow:hidden. */
+  .session-dropdown{position:fixed;background:#fff;border-radius:10px;min-width:200px;
+    box-shadow:0 12px 32px rgba(10,16,22,.24);border:1px solid var(--line);padding:6px;display:none;z-index:2000;}
   .session-menu.open .session-dropdown{display:block;}
   .session-dropdown button{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:none;background:transparent;
     color:var(--ink);font-family:var(--font-body);font-size:12.5px;font-weight:500;padding:9px 10px;border-radius:7px;cursor:pointer;transition:.12s;}
@@ -1863,12 +1870,22 @@
 
   /* ---------- Menú desplegable de sesión (Mi perfil / Editar perfil / Cambiar Contraseña) ---------- */
   const sessionMenuEl = document.querySelector(".session-menu");
-  document.getElementById("sessionMenuBtn").addEventListener("click", (e) => {
+  const sessionMenuBtnEl = document.getElementById("sessionMenuBtn");
+  const sessionDropdownEl = document.getElementById("sessionDropdown");
+  function posicionarSessionDropdown_(){
+    const r = sessionMenuBtnEl.getBoundingClientRect();
+    sessionDropdownEl.style.top = (r.bottom + 8) + "px";
+    sessionDropdownEl.style.right = (window.innerWidth - r.right) + "px";
+  }
+  sessionMenuBtnEl.addEventListener("click", (e) => {
     e.stopPropagation();
+    const willOpen = !sessionMenuEl.classList.contains("open");
+    if(willOpen) posicionarSessionDropdown_();
     sessionMenuEl.classList.toggle("open");
   });
+  window.addEventListener("resize", () => { if(sessionMenuEl.classList.contains("open")) posicionarSessionDropdown_(); });
   document.addEventListener("click", (e) => {
-    if(sessionMenuEl && sessionMenuEl.classList.contains("open") && !sessionMenuEl.contains(e.target)){
+    if(sessionMenuEl && sessionMenuEl.classList.contains("open") && !sessionMenuEl.contains(e.target) && !sessionDropdownEl.contains(e.target)){
       sessionMenuEl.classList.remove("open");
     }
   });
