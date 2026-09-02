@@ -41,20 +41,20 @@
     display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.18s;margin-left:auto;}
   .sidebar-toggle-btn:hover{background:var(--cyan);color:#0E3538;}
   .sidebar-toggle-btn svg{width:16px;height:16px;}
-  .topbar-content-zone{flex:1;display:flex;align-items:center;justify-content:flex-end;padding:0 16px;min-width:0;gap:14px;overflow:hidden;}
-  .topbar-badge{display:flex;align-items:center;gap:7px;color:#CCE9EB;font-size:11px;font-weight:500;flex:none;white-space:nowrap;
-    background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:5px 12px 5px 9px;}
-  .topbar-badge .dot{width:7px;height:7px;border-radius:50%;background:var(--ok);flex:none;box-shadow:0 0 0 3px rgba(63,166,107,.25);}
-  .topbar-badge-text{white-space:nowrap;}
+  .topbar-content-zone{flex:1;display:flex;align-items:center;justify-content:flex-end;padding:0 16px;min-width:0;gap:16px;overflow:hidden;}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+  /* El estado de conexión ahora es solo un punto (verde=ok, ámbar/rojo=falla),
+     sin texto visible — el detalle queda en el atributo title (tooltip) para
+     quien lo necesite, y para lectores de pantalla vía .sr-only. Menos ruido
+     visual en el topbar, como se pidió. */
+  .topbar-badge{display:flex;align-items:center;justify-content:center;flex:none;
+    width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);cursor:default;}
+  .topbar-badge .dot{width:9px;height:9px;border-radius:50%;background:var(--ok);flex:none;box-shadow:0 0 0 4px rgba(63,166,107,.22);}
   .topbar-title{color:#B9C3CE;font-size:11.5px;font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:0 1 auto;min-width:0;}
   /* Franja intermedia: en vez de un solo corte binario a 760px, vamos degradando
      progresivamente lo menos importante primero para que nada se encime nunca. */
   @media(max-width:1180px){
     .topbar-title{display:none;}
-  }
-  @media(max-width:980px){
-    .topbar-badge-text{display:none;}
-    .topbar-badge{gap:0;padding:5px 8px;}
   }
   @media(max-width:900px){
     .admin-franq-switch label{display:none;}
@@ -100,6 +100,9 @@
   .sidebar-mobile-panel .session-chip{color:#0b3438;}
   .sidebar-mobile-panel .session-chip .role-tag{background:rgba(11,52,56,.18);}
   .sidebar-mobile-panel .session-logout{border-color:rgba(11,52,56,.35);color:#0b3438;}
+  .sidebar-mobile-panel .session-menu-btn{background:rgba(11,52,56,.08);border-color:rgba(11,52,56,.2);}
+  .sidebar-mobile-panel .session-menu-text span:first-child{color:#0b3438;}
+  .sidebar-mobile-panel .session-menu-btn .chevron{color:rgba(11,52,56,.6);}
   .sidebar-title{color:#fff;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin:16px 0 4px 18px;font-family:var(--font-display);}
   .sidebar-sub{color:rgba(255,255,255,.72);font-size:10.5px;margin:0 18px 14px;font-weight:300;}
 
@@ -342,17 +345,24 @@
   .toast{background:#fff;border-radius:8px;padding:12px 16px;font-size:12.5px;line-height:1.5;box-shadow:0 8px 24px rgba(0,0,0,.2);border-left:4px solid var(--info);color:var(--ink);animation:toastIn .18s ease;}
   .toast.toast-error{border-left-color:var(--bad);}
   .toast.toast-success{border-left-color:var(--ok);}
+  .toast.toast-warn{border-left-color:var(--warn);}
   @keyframes toastIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
 
   /* ---------- Modal de Auditoría (crear/editar/eliminar evento del calendario) ---------- */
   #audModal{position:fixed;inset:0;background:rgba(20,30,32,.55);display:none;align-items:center;justify-content:center;z-index:9999;padding:24px;}
   #miPerfilModal{position:fixed;inset:0;background:rgba(20,30,32,.55);display:none;align-items:center;justify-content:center;z-index:9999;padding:24px;}
+  #verPerfilModal{position:fixed;inset:0;background:rgba(20,30,32,.55);display:none;align-items:center;justify-content:center;z-index:9999;padding:24px;}
+  #cambiarPassModal{position:fixed;inset:0;background:rgba(20,30,32,.55);display:none;align-items:center;justify-content:center;z-index:9999;padding:24px;}
   #pryModal{position:fixed;inset:0;background:rgba(20,30,32,.55);display:none;align-items:center;justify-content:center;z-index:9999;padding:24px;}
   #tareaModal{position:fixed;inset:0;background:rgba(20,30,32,.55);display:none;align-items:center;justify-content:center;z-index:9999;padding:24px;}
+  #usrModal{position:fixed;inset:0;background:rgba(20,30,32,.55);display:none;align-items:center;justify-content:center;z-index:9999;padding:24px;}
   #audModal.show{display:flex;}
   #miPerfilModal.show{display:flex;}
+  #verPerfilModal.show{display:flex;}
+  #cambiarPassModal.show{display:flex;}
   #pryModal.show{display:flex;}
   #tareaModal.show{display:flex;}
+  #usrModal.show{display:flex;}
   .aud-modal-box{background:#fff;border-radius:12px;max-width:520px;width:100%;max-height:88vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.3);}
   .aud-modal-head{padding:18px 22px;border-bottom:1px solid var(--input-border);display:flex;align-items:center;justify-content:space-between;}
   .aud-modal-head h3{margin:0;font-family:var(--font-display);font-size:15px;color:var(--navy);}
@@ -375,12 +385,31 @@
   .app-shell.session-active{display:block;}
 
   .session-chip{display:flex;align-items:center;gap:8px;color:#fff;font-size:11.5px;}
-  .session-chip .avatar{width:26px;height:26px;border-radius:50%;background:var(--cyan);color:#0b3438;font-weight:800;
-    display:flex;align-items:center;justify-content:center;font-size:11px;flex:none;}
-  .session-chip .role-tag{background:rgba(255,255,255,.18);border-radius:20px;padding:1px 8px;font-size:9.5px;font-weight:800;text-transform:uppercase;}
-  .session-logout{background:transparent;border:1px solid rgba(255,255,255,.35);color:#fff;border-radius:7px;
-    padding:5px 9px;font-size:10.5px;cursor:pointer;font-weight:700;}
-  .session-logout:hover{background:rgba(255,255,255,.12);}
+  .session-chip .avatar{width:28px;height:28px;border-radius:50%;background:var(--cyan);color:#0b3438;font-weight:800;
+    display:flex;align-items:center;justify-content:center;font-size:11px;flex:none;overflow:hidden;}
+  .session-chip .avatar img{width:100%;height:100%;object-fit:cover;}
+  .session-chip .role-tag{background:rgba(255,255,255,.18);border-radius:20px;padding:1px 8px;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.3px;}
+
+  /* ---------- Menú de sesión (Mi perfil / Editar perfil / Cambiar Contraseña) ---------- */
+  .session-menu{position:relative;}
+  .session-menu-btn{display:flex;align-items:center;gap:9px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);
+    border-radius:22px;padding:4px 12px 4px 4px;cursor:pointer;transition:.15s;font-family:var(--font-body);}
+  .session-menu-btn:hover{background:rgba(255,255,255,.12);}
+  .session-menu-text{display:flex;flex-direction:column;align-items:flex-start;gap:1px;line-height:1.15;}
+  .session-menu-text span:first-child{font-size:12px;font-weight:700;color:#fff;white-space:nowrap;}
+  .session-menu-btn .chevron{width:13px;height:13px;color:rgba(255,255,255,.6);flex:none;transition:transform .18s;}
+  .session-menu.open .session-menu-btn .chevron{transform:rotate(180deg);}
+  .session-dropdown{position:absolute;top:calc(100% + 8px);right:0;background:#fff;border-radius:10px;min-width:200px;
+    box-shadow:0 12px 32px rgba(10,16,22,.24);border:1px solid var(--line);padding:6px;display:none;z-index:200;}
+  .session-menu.open .session-dropdown{display:block;}
+  .session-dropdown button{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:none;background:transparent;
+    color:var(--ink);font-family:var(--font-body);font-size:12.5px;font-weight:500;padding:9px 10px;border-radius:7px;cursor:pointer;transition:.12s;}
+  .session-dropdown button:hover{background:var(--mist);}
+  .session-dropdown button svg{width:16px;height:16px;flex:none;color:var(--cyan-dark);}
+  .session-logout{background:transparent;border:1px solid rgba(255,255,255,.3);color:#fff;border-radius:50%;
+    width:32px;height:32px;flex:none;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.15s;}
+  .session-logout svg{width:15px;height:15px;}
+  .session-logout:hover{background:rgba(255,255,255,.14);border-color:var(--cyan);}
 
   /* ---------- Indicadores ---------- */
   .ind-filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
@@ -574,6 +603,8 @@
   .com-composer{display:flex;flex-direction:column;gap:10px;}
   .com-composer-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
   @media(max-width:640px){.com-composer-row{grid-template-columns:1fr;}}
+  .com-email-check{display:flex;align-items:flex-start;gap:8px;font-size:11.5px;color:var(--ink-soft);cursor:pointer;line-height:1.4;}
+  .com-email-check input{margin-top:2px;flex:none;}
   .com-feed{display:flex;flex-direction:column;gap:12px;margin-top:6px;}
   .com-item{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;position:relative;}
   .com-item.tipo-documento{border-left:3px solid var(--cyan);}
@@ -885,10 +916,133 @@
   </div>
 </div>
 
+<div id="usrModal">
+  <div class="aud-modal-box">
+    <div class="aud-modal-head">
+      <h3 id="usrModalTitle">Nuevo usuario</h3>
+      <button class="terms-box-close" id="usrModalCloseX" aria-label="Cerrar">&times;</button>
+    </div>
+    <div class="aud-modal-body">
+      <div class="aud-modal-error" id="usrModalError"></div>
+      <div class="aud-modal-row">
+        <div>
+          <label>Nombre completo</label>
+          <input type="text" id="usrFNombre" placeholder="Ej. Karen Astorga">
+        </div>
+        <div>
+          <label>Usuario (clave de acceso)</label>
+          <input type="text" id="usrFUsuario" placeholder="Ej. karen.astorga">
+        </div>
+      </div>
+      <div class="aud-modal-row">
+        <div>
+          <label>Rol</label>
+          <select id="usrFRol">
+            <option value="admin">Administrador</option>
+            <option value="coordinador_sgc">Coordinadora del SGC</option>
+            <option value="calidad">Calidad</option>
+            <option value="franquicia">Franquicia</option>
+          </select>
+        </div>
+        <div>
+          <label>Franquicia(s)</label>
+          <select id="usrFFranquicias"><option value="todas">Todas</option></select>
+        </div>
+      </div>
+      <div id="usrModalActivoRow" class="aud-modal-row" style="display:none;">
+        <div>
+          <label>Estatus de la cuenta</label>
+          <select id="usrFActivo">
+            <option value="1">Activo</option>
+            <option value="0">Desactivado</option>
+          </select>
+        </div>
+        <div></div>
+      </div>
+      <div>
+        <label id="usrFPasswordLabel">Contraseña inicial</label>
+        <input type="password" id="usrFPassword" placeholder="Mínimo 6 caracteres" autocomplete="new-password">
+      </div>
+    </div>
+    <div class="aud-modal-foot">
+      <div style="display:flex;gap:10px;margin-left:auto;">
+        <button class="btn-close2" id="usrModalCancel">Cancelar</button>
+        <button class="btn-accept" id="usrModalSave">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="verPerfilModal">
+  <div class="aud-modal-box" style="max-width:400px;">
+    <div class="aud-modal-head">
+      <h3>Mi perfil</h3>
+      <button class="terms-box-close" id="verPerfilCloseX" aria-label="Cerrar">&times;</button>
+    </div>
+    <div class="aud-modal-body">
+      <div>
+        <label>Nombre</label>
+        <input type="text" id="verPerfilNombre" disabled>
+      </div>
+      <div>
+        <label>Usuario</label>
+        <input type="text" id="verPerfilUsuario" disabled>
+      </div>
+      <div>
+        <label>Rol</label>
+        <input type="text" id="verPerfilRol" disabled>
+      </div>
+      <div>
+        <label>Franquicia(s)</label>
+        <input type="text" id="verPerfilFranquicias" disabled>
+      </div>
+      <div>
+        <label>Correo</label>
+        <input type="text" id="verPerfilCorreo" disabled>
+      </div>
+    </div>
+    <div class="aud-modal-foot">
+      <div style="display:flex;gap:10px;margin-left:auto;">
+        <button class="btn-accept" id="verPerfilCerrar">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="cambiarPassModal">
+  <div class="aud-modal-box" style="max-width:400px;">
+    <div class="aud-modal-head">
+      <h3>Cambiar contraseña</h3>
+      <button class="terms-box-close" id="cambiarPassCloseX" aria-label="Cerrar">&times;</button>
+    </div>
+    <div class="aud-modal-body">
+      <div class="aud-modal-error" id="cambiarPassError"></div>
+      <div>
+        <label>Contraseña actual</label>
+        <input type="password" id="cambiarPassActual" autocomplete="current-password">
+      </div>
+      <div>
+        <label>Nueva contraseña</label>
+        <input type="password" id="cambiarPassNueva" autocomplete="new-password" placeholder="Mínimo 6 caracteres">
+      </div>
+      <div>
+        <label>Confirmar nueva contraseña</label>
+        <input type="password" id="cambiarPassConfirmar" autocomplete="new-password">
+      </div>
+    </div>
+    <div class="aud-modal-foot">
+      <div style="display:flex;gap:10px;margin-left:auto;">
+        <button class="btn-close2" id="cambiarPassCancel">Cancelar</button>
+        <button class="btn-accept" id="cambiarPassGuardar">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="miPerfilModal">
   <div class="aud-modal-box" style="max-width:400px;">
     <div class="aud-modal-head">
-      <h3>Datos del usuario</h3>
+      <h3>Editar perfil</h3>
       <button class="terms-box-close" id="miPerfilCloseX" aria-label="Cerrar">&times;</button>
     </div>
     <div class="aud-modal-body">
@@ -943,16 +1097,36 @@
         <label>Franquicia:</label>
         <select id="adminFranqSelect"></select>
       </div>
-      <div class="topbar-badge"><span class="dot" id="topbarDot"></span> <span class="topbar-badge-text" id="topbarSyncText">Conectando…</span></div>
+      <div class="topbar-badge" id="topbarStatusDot" title="Conectando…"><span class="dot" id="topbarDot"></span><span class="sr-only" id="topbarSyncText">Conectando…</span></div>
       <div class="topbar-title">ISO 9001:2015 · Certificado 26MS300403</div>
       <div class="session-chip" id="sessionChip" style="display:none;">
-        <div class="avatar" id="sessionAvatar">?</div>
-        <div>
-          <div id="sessionName" style="font-weight:700;"></div>
-          <span class="role-tag" id="sessionRoleTag"></span>
+        <div class="session-menu">
+          <button type="button" class="session-menu-btn" id="sessionMenuBtn">
+            <div class="avatar" id="sessionAvatar">?</div>
+            <div class="session-menu-text">
+              <span id="sessionName"></span>
+              <span class="role-tag" id="sessionRoleTag"></span>
+            </div>
+            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="session-dropdown" id="sessionDropdown">
+            <button type="button" id="sessionViewProfileBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+              Mi perfil
+            </button>
+            <button type="button" id="sessionEditProfileBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+              Editar perfil
+            </button>
+            <button type="button" id="sessionChangePassBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              Cambiar Contraseña
+            </button>
+          </div>
         </div>
-        <button class="session-logout" id="sessionProfileBtn" style="margin-right:6px;">Mi perfil</button>
-        <button class="session-logout" id="sessionLogoutBtn">Salir</button>
+        <button class="session-logout" id="sessionLogoutBtn" title="Salir">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        </button>
       </div>
     </div>
   </div>
@@ -1024,6 +1198,10 @@
             <button data-view="auditlog" id="navAuditLog" style="display:none;">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/></svg>
               Auditoría del Sistema
+            </button>
+            <button data-view="usuarios" id="navUsuarios" style="display:none;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              Usuarios
             </button>
             <div id="calidadTabsContainer"></div>
           </div></div>
@@ -1366,6 +1544,22 @@
           <div id="auditLogTableWrap"></div>
         </div>
 
+        <!-- ===================== USUARIOS (solo admin) ===================== -->
+        <div class="view" id="view-usuarios">
+          <h2 class="view-title">Usuarios</h2>
+          <p class="view-sub">Da de alta y administra las cuentas de acceso al portal: nombre, clave de usuario, rol y franquicia. Solo visible para Administrador.</p>
+
+          <div class="doc-count-row" id="usrCountRow"></div>
+
+          <div class="panel">
+            <div class="doc-toolbar">
+              <button class="btn btn-primary" id="usrNewBtn">+ Nuevo usuario</button>
+              <input type="text" id="usrBuscar" placeholder="Buscar por nombre o usuario...">
+            </div>
+            <div class="nc-table-wrap" id="usrTableWrap"></div>
+          </div>
+        </div>
+
         <!-- ===================== PROYECTOS ISO (tablero tipo Monday) ===================== -->
         <div class="view" id="view-proyectos">
           <div id="pryListSection">
@@ -1466,6 +1660,10 @@
                 <input type="text" id="comVersionNueva" placeholder="Versión nueva (opcional, ej. 2.1)">
                 <input type="text" id="comDriveLink" placeholder="Link de Drive (opcional)">
               </div>
+              <label class="com-email-check">
+                <input type="checkbox" id="comEnviarCorreo">
+                <span>También enviar por correo a todo el equipo (usa tu correo de "Mi perfil" como "Responder a")</span>
+              </label>
               <div><button class="btn btn-primary" id="comPublicar">Publicar comunicado</button>
               <span id="comPublicarStatus" style="font-size:11.5px;color:var(--ink-soft);margin-left:10px;"></span></div>
             </div>
@@ -1639,6 +1837,7 @@
     document.getElementById("sessionRoleTag").textContent = roleLabelMap[user.rol] || user.rol;
     document.getElementById("adminFranqSwitch").classList.toggle("show", user.rol === "admin");
     document.getElementById("navAuditLog").style.display = (user.rol === "admin" || user.rol === "coordinador_sgc") ? "" : "none";
+    document.getElementById("navUsuarios").style.display = (user.rol === "admin") ? "" : "none";
     renderCalidadTabs_();
     goto("inicio");
     resetInactivityTimer_();
@@ -1662,9 +1861,40 @@
 
   document.getElementById("sessionLogoutBtn").addEventListener("click", () => endSession_());
 
-  /* ---------- Modal "Mi perfil" / Datos del usuario ---------- */
+  /* ---------- Menú desplegable de sesión (Mi perfil / Editar perfil / Cambiar Contraseña) ---------- */
+  const sessionMenuEl = document.querySelector(".session-menu");
+  document.getElementById("sessionMenuBtn").addEventListener("click", (e) => {
+    e.stopPropagation();
+    sessionMenuEl.classList.toggle("open");
+  });
+  document.addEventListener("click", (e) => {
+    if(sessionMenuEl && sessionMenuEl.classList.contains("open") && !sessionMenuEl.contains(e.target)){
+      sessionMenuEl.classList.remove("open");
+    }
+  });
+
+  /* ---------- "Mi perfil" (solo lectura) ---------- */
+  function openVerPerfil_(){
+    if(!session) return;
+    sessionMenuEl.classList.remove("open");
+    const roleLabelMap = {admin:"Administrador", coordinador_sgc:"Coord. SGC", calidad:"Calidad", franquicia:"Franquicia"};
+    document.getElementById("verPerfilNombre").value = session.nombre || "";
+    document.getElementById("verPerfilUsuario").value = session.usuario || "";
+    document.getElementById("verPerfilRol").value = roleLabelMap[session.rol] || session.rol || "";
+    document.getElementById("verPerfilFranquicias").value = session.franquicias || "Todas";
+    document.getElementById("verPerfilCorreo").value = session.correo || "(sin capturar)";
+    document.getElementById("verPerfilModal").classList.add("show");
+  }
+  function closeVerPerfil_(){ document.getElementById("verPerfilModal").classList.remove("show"); }
+  document.getElementById("sessionViewProfileBtn").addEventListener("click", openVerPerfil_);
+  document.getElementById("verPerfilCloseX").addEventListener("click", closeVerPerfil_);
+  document.getElementById("verPerfilCerrar").addEventListener("click", closeVerPerfil_);
+  document.getElementById("verPerfilModal").addEventListener("click", (e) => { if(e.target.id === "verPerfilModal") closeVerPerfil_(); });
+
+  /* ---------- "Editar perfil" (correo) ---------- */
   function openMiPerfil_(){
     if(!session) return;
+    sessionMenuEl.classList.remove("open");
     document.getElementById("miPerfilError").style.display = "none";
     document.getElementById("miPerfilNombre").value = session.nombre || "";
     document.getElementById("miPerfilUsuario").value = session.usuario || "";
@@ -1672,7 +1902,7 @@
     document.getElementById("miPerfilModal").classList.add("show");
   }
   function closeMiPerfil_(){ document.getElementById("miPerfilModal").classList.remove("show"); }
-  document.getElementById("sessionProfileBtn").addEventListener("click", openMiPerfil_);
+  document.getElementById("sessionEditProfileBtn").addEventListener("click", openMiPerfil_);
   document.getElementById("miPerfilCloseX").addEventListener("click", closeMiPerfil_);
   document.getElementById("miPerfilCancel").addEventListener("click", closeMiPerfil_);
   document.getElementById("miPerfilModal").addEventListener("click", (e) => { if(e.target.id === "miPerfilModal") closeMiPerfil_(); });
@@ -1696,6 +1926,46 @@
       closeMiPerfil_();
     }).catch(() => {
       btn.disabled = false;
+      errEl.textContent = "Error de conexión al guardar.";
+      errEl.style.display = "block";
+    });
+  });
+
+  /* ---------- "Cambiar Contraseña" ---------- */
+  function openCambiarPass_(){
+    if(!session) return;
+    sessionMenuEl.classList.remove("open");
+    document.getElementById("cambiarPassError").style.display = "none";
+    ["cambiarPassActual","cambiarPassNueva","cambiarPassConfirmar"].forEach(id2 => document.getElementById(id2).value = "");
+    document.getElementById("cambiarPassModal").classList.add("show");
+  }
+  function closeCambiarPass_(){ document.getElementById("cambiarPassModal").classList.remove("show"); }
+  document.getElementById("sessionChangePassBtn").addEventListener("click", openCambiarPass_);
+  document.getElementById("cambiarPassCloseX").addEventListener("click", closeCambiarPass_);
+  document.getElementById("cambiarPassCancel").addEventListener("click", closeCambiarPass_);
+  document.getElementById("cambiarPassModal").addEventListener("click", (e) => { if(e.target.id === "cambiarPassModal") closeCambiarPass_(); });
+  document.getElementById("cambiarPassGuardar").addEventListener("click", () => {
+    const errEl = document.getElementById("cambiarPassError");
+    errEl.style.display = "none";
+    const actual = document.getElementById("cambiarPassActual").value;
+    const nueva = document.getElementById("cambiarPassNueva").value;
+    const confirmar = document.getElementById("cambiarPassConfirmar").value;
+    if(!actual || !nueva){ errEl.textContent = "Completa la contraseña actual y la nueva."; errEl.style.display = "block"; return; }
+    if(nueva.length < 6){ errEl.textContent = "La nueva contraseña debe tener al menos 6 caracteres."; errEl.style.display = "block"; return; }
+    if(nueva !== confirmar){ errEl.textContent = "La confirmación no coincide con la nueva contraseña."; errEl.style.display = "block"; return; }
+    const btn = document.getElementById("cambiarPassGuardar");
+    btn.disabled = true; btn.textContent = "Guardando...";
+    apiPost("cambiarPassword", { actual, nueva }).then(res => {
+      btn.disabled = false; btn.textContent = "Guardar";
+      if(!res || !res.ok){
+        errEl.textContent = (res && res.error) || "No se pudo cambiar la contraseña.";
+        errEl.style.display = "block";
+        return;
+      }
+      toast_("Contraseña actualizada correctamente.", "success");
+      closeCambiarPass_();
+    }).catch(() => {
+      btn.disabled = false; btn.textContent = "Guardar";
       errEl.textContent = "Error de conexión al guardar.";
       errEl.style.display = "block";
     });
@@ -2605,6 +2875,7 @@
     if(view === "auditlog") renderAuditLog();
     if(view === "proyectos"){ pryShowList_(); cargarProyectos_(); }
     if(view === "documentos") cargarDocumentos_();
+    if(view === "usuarios") cargarUsuariosAdmin_();
     if(view === "comunicados") cargarComunicados_();
   }
 
@@ -2628,7 +2899,10 @@
   sidebarGroups.forEach(groupEl => {
     let saved = null;
     try{ saved = localStorage.getItem(SIDEBAR_GROUP_STATE_PREFIX + groupEl.dataset.group); }catch(e){}
-    setSidebarGroupCollapsed_(groupEl, saved === "1", false);
+    // Por defecto los grupos arrancan PLEGADOS (como el menú del portal de
+    // Purifika); si la persona ya abrió/cerró un grupo antes, se respeta lo
+    // que dejó guardado en localStorage ("0" = abierto explícitamente).
+    setSidebarGroupCollapsed_(groupEl, saved !== "0", false);
     const toggleBtn = groupEl.querySelector(".sidebar-group-toggle");
     toggleBtn.addEventListener("click", () => {
       setSidebarGroupCollapsed_(groupEl, !groupEl.classList.contains("collapsed"), true);
@@ -3146,14 +3420,16 @@
   /* ---------- Sincronización con el backend (Google Sheets) ---------- */
   function setSyncStatus_(ok, text){
     const dot = document.getElementById("topbarDot");
+    const badge = document.getElementById("topbarStatusDot");
     const topText = document.getElementById("topbarSyncText");
     const banner = document.getElementById("syncBanner");
     const bannerDot = document.getElementById("syncBannerDot");
     const bannerText = document.getElementById("syncBannerText");
-    if(dot) dot.style.background = ok ? "var(--ok)" : "var(--warn)";
+    if(dot) dot.style.background = ok ? "var(--ok)" : "var(--bad)";
+    if(badge) badge.title = text;
     if(topText) topText.textContent = text;
     if(bannerText) bannerText.textContent = text;
-    if(bannerDot) bannerDot.style.background = ok ? "var(--ok)" : "var(--warn)";
+    if(bannerDot) bannerDot.style.background = ok ? "var(--ok)" : "var(--bad)";
     if(banner) banner.classList.toggle("warn", !ok);
   }
 
@@ -3663,12 +3939,15 @@
       tipo: document.getElementById("comTipo").value,
       documentoCodigo: document.getElementById("comDocCodigo").value.trim(),
       versionNueva: document.getElementById("comVersionNueva").value.trim(),
-      driveLink: document.getElementById("comDriveLink").value.trim()
+      driveLink: document.getElementById("comDriveLink").value.trim(),
+      enviarCorreo: document.getElementById("comEnviarCorreo").checked
     });
     if(res && res.ok){
       status.textContent = "Publicado.";
       ["comTitulo","comMensaje","comDocCodigo","comVersionNueva","comDriveLink"].forEach(k => document.getElementById(k).value = "");
       document.getElementById("comTipo").value = "General";
+      document.getElementById("comEnviarCorreo").checked = false;
+      if(res.avisoCorreo) toast_(res.avisoCorreo, res.avisoCorreo.indexOf("No se envió") === 0 ? "warn" : "success");
       cargarComunicados_();
     } else {
       status.textContent = (res && res.error) || "No se pudo publicar.";
@@ -3677,6 +3956,133 @@
 
   // Carga inicial silenciosa del contador de Comunicados en el menú (si ya hay sesión activa)
   if(typeof session !== "undefined" && session && session.token) cargarComunicados_();
+
+  /* =====================================================================
+     USUARIOS — alta y edición de cuentas desde el portal (solo admin).
+     El backend valida rol admin de nuevo por su cuenta (no confía en que
+     el botón esté oculto), así que aunque alguien manipulara el HTML no
+     podría crear/editar usuarios sin ser admin de verdad.
+     ===================================================================== */
+  const roleLabelMapUsr_ = {admin:"Administrador", coordinador_sgc:"Coord. SGC", calidad:"Calidad", franquicia:"Franquicia"};
+  let usrEditando_ = null;
+
+  (function fillUsrFranquiciasSelect_(){
+    const sel = document.getElementById("usrFFranquicias");
+    if(!sel) return;
+    sel.innerHTML = `<option value="todas">Todas</option>` +
+      FRANQUICIAS_CLAVE_PORTAL.map(c => `<option>${esc(c)}</option>`).join("") +
+      FRANQUICIAS.map(f => `<option>${esc(f)}</option>`).join("");
+  })();
+
+  function cargarUsuariosAdmin_(){
+    apiGet("adminListarUsuarios").then(res => {
+      if(!res || !res.ok){ toast_((res && res.error) || "No se pudo cargar la lista de usuarios.", "error"); return; }
+      state.usuariosAdmin = res.usuarios || [];
+      renderUsuariosAdmin_();
+    }).catch(() => toast_("Error de conexión al cargar usuarios.", "error"));
+  }
+
+  function renderUsuariosAdmin_(){
+    const lista = state.usuariosAdmin || [];
+    const buscar = (document.getElementById("usrBuscar").value || "").toLowerCase().trim();
+    const filtrada = buscar ? lista.filter(u => (u.nombre||"").toLowerCase().includes(buscar) || (u.usuario||"").toLowerCase().includes(buscar)) : lista;
+
+    const countRow = document.getElementById("usrCountRow");
+    const activos = lista.filter(u => u.activo).length;
+    countRow.innerHTML = `
+      <div class="doc-count-card"><div class="n">${lista.length}</div><div class="l">Total usuarios</div></div>
+      <div class="doc-count-card"><div class="n">${activos}</div><div class="l">Activos</div></div>
+      <div class="doc-count-card"><div class="n">${lista.length - activos}</div><div class="l">Desactivados</div></div>`;
+
+    const wrap = document.getElementById("usrTableWrap");
+    if(!filtrada.length){
+      wrap.innerHTML = "<p style=\"font-size:12.5px;color:var(--ink-soft);\">No hay usuarios que coincidan.</p>";
+      return;
+    }
+    const rows = filtrada.map(u => `<tr style="${u.activo ? "" : "opacity:.5;"}">
+        <td><b>${esc(u.nombre)}</b></td>
+        <td>${esc(u.usuario)}</td>
+        <td>${esc(roleLabelMapUsr_[u.rol] || u.rol)}</td>
+        <td>${esc(u.franquicias || "Todas")}</td>
+        <td>${esc(u.correo || "—")}</td>
+        <td>${u.activo ? "<span style=\"color:var(--ok);font-weight:700;\">Activo</span>" : "<span style=\"color:var(--bad);font-weight:700;\">Desactivado</span>"}</td>
+        <td><span class="edit-x" data-usuario="${esc(u.usuario)}" style="cursor:pointer;color:var(--cyan-dark);font-weight:700;">Editar</span></td>
+      </tr>`).join("");
+    wrap.innerHTML = `<table class="nc-table"><thead><tr><th>Nombre</th><th>Usuario</th><th>Rol</th><th>Franquicia(s)</th><th>Correo</th><th>Estatus</th><th></th></tr></thead><tbody>${rows}</tbody></table>`;
+    wrap.querySelectorAll(".edit-x").forEach(x => {
+      x.addEventListener("click", () => openUsrModal_(x.dataset.usuario));
+    });
+  }
+  document.getElementById("usrBuscar").addEventListener("input", renderUsuariosAdmin_);
+
+  document.getElementById("usrNewBtn").addEventListener("click", () => openUsrModal_(null));
+
+  function openUsrModal_(usuario){
+    usrEditando_ = usuario;
+    const errEl = document.getElementById("usrModalError"); errEl.style.display = "none"; errEl.textContent = "";
+    const pwLabel = document.getElementById("usrFPasswordLabel");
+    const pwInput = document.getElementById("usrFPassword");
+    const activoRow = document.getElementById("usrModalActivoRow");
+    if(usuario){
+      const u = (state.usuariosAdmin || []).find(x => x.usuario === usuario);
+      if(!u) return;
+      document.getElementById("usrModalTitle").textContent = "Editar usuario";
+      document.getElementById("usrFNombre").value = u.nombre || "";
+      document.getElementById("usrFUsuario").value = u.usuario || "";
+      document.getElementById("usrFUsuario").disabled = true;
+      document.getElementById("usrFRol").value = u.rol || "franquicia";
+      document.getElementById("usrFFranquicias").value = u.franquicias || "todas";
+      document.getElementById("usrFActivo").value = u.activo ? "1" : "0";
+      activoRow.style.display = "";
+      pwLabel.textContent = "Nueva contraseña (déjalo en blanco para no cambiarla)";
+      pwInput.value = "";
+      pwInput.placeholder = "Dejar en blanco = no cambiar";
+    } else {
+      document.getElementById("usrModalTitle").textContent = "Nuevo usuario";
+      document.getElementById("usrFNombre").value = "";
+      document.getElementById("usrFUsuario").value = "";
+      document.getElementById("usrFUsuario").disabled = false;
+      document.getElementById("usrFRol").value = "franquicia";
+      document.getElementById("usrFFranquicias").value = "todas";
+      activoRow.style.display = "none";
+      pwLabel.textContent = "Contraseña inicial";
+      pwInput.value = "";
+      pwInput.placeholder = "Mínimo 6 caracteres";
+    }
+    document.getElementById("usrModal").classList.add("show");
+  }
+  function closeUsrModal_(){ document.getElementById("usrModal").classList.remove("show"); }
+  document.getElementById("usrModalCloseX").addEventListener("click", closeUsrModal_);
+  document.getElementById("usrModalCancel").addEventListener("click", closeUsrModal_);
+  document.getElementById("usrModal").addEventListener("click", e => { if(e.target.id === "usrModal") closeUsrModal_(); });
+
+  document.getElementById("usrModalSave").addEventListener("click", async () => {
+    const errEl = document.getElementById("usrModalError");
+    errEl.style.display = "none";
+    const nombre = document.getElementById("usrFNombre").value.trim();
+    const usuarioClave = document.getElementById("usrFUsuario").value.trim();
+    const rol = document.getElementById("usrFRol").value;
+    const franquicias = document.getElementById("usrFFranquicias").value;
+    const password = document.getElementById("usrFPassword").value;
+    if(!nombre || !usuarioClave){ errEl.textContent = "Nombre y usuario son obligatorios."; errEl.style.display = "block"; return; }
+    const btn = document.getElementById("usrModalSave");
+    btn.disabled = true; btn.textContent = "Guardando...";
+    try{
+      let res;
+      if(usrEditando_){
+        const payload = { usuario: usrEditando_, nombre, rol, franquicias, activo: document.getElementById("usrFActivo").value === "1" };
+        if(password) payload.nuevaPassword = password;
+        res = await apiPost("adminEditarUsuario", payload);
+      } else {
+        if(!password || password.length < 6){ errEl.textContent = "La contraseña inicial debe tener al menos 6 caracteres."; errEl.style.display = "block"; btn.disabled = false; btn.textContent = "Guardar"; return; }
+        res = await apiPost("adminCrearUsuario", { usuario: usuarioClave, nombre, rol, franquicias, password });
+      }
+      if(!res || !res.ok){ errEl.textContent = (res && res.error) || "No se pudo guardar."; errEl.style.display = "block"; return; }
+      toast_(usrEditando_ ? "Usuario actualizado." : "Usuario creado.", "success");
+      closeUsrModal_();
+      cargarUsuariosAdmin_();
+    } finally { btn.disabled = false; btn.textContent = "Guardar"; }
+  });
 
 })();
 </script>
