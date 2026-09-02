@@ -1263,9 +1263,9 @@
               <p>Resumen del cumplimiento de calidad en franquicias y acceso a la documentación completa del Sistema de Gestión de Calidad de Purifika.</p>
             </div>
             <div class="dash-hero-actions">
-              <div class="dash-hero-pill" id="syncBanner">
+              <div class="dash-hero-pill" id="syncBanner" title="Conectando…">
                 <span class="dot" id="syncBannerDot"></span>
-                <span id="syncBannerText">Conectando…</span>
+                <span class="sr-only" id="syncBannerText">Conectando…</span>
               </div>
             </div>
           </div>
@@ -2897,15 +2897,15 @@
   }
 
   sidebarGroups.forEach(groupEl => {
-    let saved = null;
-    try{ saved = localStorage.getItem(SIDEBAR_GROUP_STATE_PREFIX + groupEl.dataset.group); }catch(e){}
-    // Por defecto los grupos arrancan PLEGADOS (como el menú del portal de
-    // Purifika); si la persona ya abrió/cerró un grupo antes, se respeta lo
-    // que dejó guardado en localStorage ("0" = abierto explícitamente).
-    setSidebarGroupCollapsed_(groupEl, saved !== "0", false);
+    // Los grupos SIEMPRE arrancan plegados al entrar (cada carga de página),
+    // sin excepción y sin depender de nada guardado de antes — así se ve
+    // igual de limpio la primera vez que la persona entra y también la
+    // décima. El clic para abrir/cerrar sigue funcionando normal durante
+    // esa sesión, solo que ya no se recuerda de una carga de página a otra.
+    setSidebarGroupCollapsed_(groupEl, true, false);
     const toggleBtn = groupEl.querySelector(".sidebar-group-toggle");
     toggleBtn.addEventListener("click", () => {
-      setSidebarGroupCollapsed_(groupEl, !groupEl.classList.contains("collapsed"), true);
+      setSidebarGroupCollapsed_(groupEl, !groupEl.classList.contains("collapsed"), false);
     });
   });
 
