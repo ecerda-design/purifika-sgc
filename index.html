@@ -12,7 +12,7 @@
 <link rel="icon" type="image/png" href="https://i.ibb.co/QF9XQCdw/purifika-favicon-64.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"
@@ -22,30 +22,31 @@
     --charcoal:#54565A; --navy:#2B3643; --cyan:#2DBDC9; --cyan-dark:#1AA3AA;
     --mist:#F4F8F9; --paper:#FFFFFF; --line:#EEEFF3; --ink:#2C2E30; --ink-soft:#75787B;
     --ok:#3FA66B; --warn:#E0A02E; --bad:#C24A42; --info:#8A93AB;
-    --radius:10px; --header-h:50px; --sidebar-w:250px; --input-border:#C2CAD8;
-    --font-display:'Poppins','Open Sans',Calibri,'Segoe UI',Tahoma,Arial,sans-serif;
-    --font-body:'Open Sans',Calibri,'Segoe UI',Tahoma,Arial,sans-serif;
+    --radius:10px; --radius-lg:16px; --header-h:54px; --sidebar-w:258px; --input-border:#C2CAD8;
+    --font-display:'Poppins','Segoe UI',Calibri,Tahoma,Arial,sans-serif;
+    --font-body:'Poppins','Segoe UI',Calibri,Tahoma,Arial,sans-serif;
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;height:100%;overflow-x:hidden;}
-  body{font-family:var(--font-body);background:var(--mist);color:var(--ink);-webkit-font-smoothing:antialiased;}
+  body{font-family:var(--font-body);font-weight:300;background:var(--mist);color:var(--ink);-webkit-font-smoothing:antialiased;letter-spacing:.1px;}
 
   .app-shell{min-height:100vh;}
-  .topbar{height:var(--header-h);background:var(--navy);position:fixed;top:0;left:0;right:0;display:flex;align-items:stretch;z-index:100;}
-  .topbar::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;
-    background:linear-gradient(90deg,var(--cyan) 0%, var(--cyan) 40%, transparent 40%, transparent 60%, var(--cyan) 60%, var(--cyan) 100%);opacity:.9;z-index:2;}
-  .topbar-brand-zone{width:var(--sidebar-w);flex:none;background:#13575D;display:flex;align-items:center;min-width:0;padding:0 12px;}
+  .topbar{height:var(--header-h);background:linear-gradient(135deg,#1B2530,var(--navy) 55%,#233040);position:fixed;top:0;left:0;right:0;display:flex;align-items:stretch;z-index:100;box-shadow:0 1px 0 rgba(255,255,255,.04) inset,0 4px 18px rgba(10,16,22,.18);}
+  .topbar::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;
+    background:linear-gradient(90deg,var(--cyan),#6FE3D6 50%,var(--cyan));opacity:.95;z-index:2;}
+  .topbar-brand-zone{width:var(--sidebar-w);flex:none;background:rgba(0,0,0,.16);display:flex;align-items:center;min-width:0;padding:0 12px;}
   .topbar-brand{display:flex;align-items:center;min-width:0;flex:1 1 auto;margin-left:6px;overflow:hidden;}
-  .topbar-logo{height:38px;width:auto;max-width:100%;flex:none;display:block;object-fit:contain;}
-  .sidebar-toggle-btn{width:34px;height:34px;flex:none;border-radius:50px;border:none;background:#39B9C4;color:#fff;
-    display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.15s;margin-left:auto;}
-  .sidebar-toggle-btn:hover{background:var(--cyan-dark);}
+  .topbar-logo{height:36px;width:auto;max-width:100%;flex:none;display:block;object-fit:contain;}
+  .sidebar-toggle-btn{width:34px;height:34px;flex:none;border-radius:50px;border:none;background:rgba(255,255,255,.14);color:#fff;
+    display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.18s;margin-left:auto;}
+  .sidebar-toggle-btn:hover{background:var(--cyan);color:#0E3538;}
   .sidebar-toggle-btn svg{width:16px;height:16px;}
-  .topbar-content-zone{flex:1;display:flex;align-items:center;justify-content:flex-end;padding:0 14px;min-width:0;gap:12px;overflow:hidden;}
-  .topbar-badge{display:flex;align-items:center;gap:6px;color:#CCE9EB;font-size:11px;font-weight:600;flex:none;white-space:nowrap;}
-  .topbar-badge .dot{width:7px;height:7px;border-radius:50%;background:var(--ok);flex:none;}
+  .topbar-content-zone{flex:1;display:flex;align-items:center;justify-content:flex-end;padding:0 16px;min-width:0;gap:14px;overflow:hidden;}
+  .topbar-badge{display:flex;align-items:center;gap:7px;color:#CCE9EB;font-size:11px;font-weight:500;flex:none;white-space:nowrap;
+    background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:5px 12px 5px 9px;}
+  .topbar-badge .dot{width:7px;height:7px;border-radius:50%;background:var(--ok);flex:none;box-shadow:0 0 0 3px rgba(63,166,107,.25);}
   .topbar-badge-text{white-space:nowrap;}
-  .topbar-title{color:#CCCCCC;font-size:12px;font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:0 1 auto;min-width:0;}
+  .topbar-title{color:#B9C3CE;font-size:11.5px;font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:0 1 auto;min-width:0;}
   /* Franja intermedia: en vez de un solo corte binario a 760px, vamos degradando
      progresivamente lo menos importante primero para que nada se encime nunca. */
   @media(max-width:1180px){
@@ -53,11 +54,11 @@
   }
   @media(max-width:980px){
     .topbar-badge-text{display:none;}
-    .topbar-badge{gap:0;}
+    .topbar-badge{gap:0;padding:5px 8px;}
   }
   @media(max-width:900px){
     .admin-franq-switch label{display:none;}
-    .admin-franq-switch select{max-width:104px;}
+    .admin-franq-switch select{max-width:100px;}
   }
   @media(max-width:800px){
     .topbar-badge{display:none;}
@@ -66,8 +67,14 @@
     .topbar-brand-zone{width:auto;flex:1;}
     .topbar-content-zone{display:none;}
   }
-  .admin-franq-switch select{min-width:0;flex:0 1 auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-  .admin-franq-switch{min-width:0;flex:0 1 auto;}
+  .admin-franq-switch{min-width:0;flex:none;display:none;align-items:center;gap:8px;
+    background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:9px;padding:5px 6px 5px 12px;}
+  .admin-franq-switch.show{display:flex;}
+  .admin-franq-switch label{color:#CCE9EB;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;}
+  .admin-franq-switch select{min-width:0;flex:0 1 auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);color:#fff;border-radius:6px;
+    padding:5px 8px;font-size:11.5px;font-weight:600;font-family:var(--font-body);cursor:pointer;}
+  .admin-franq-switch select option{color:var(--ink);}
   .session-chip{flex:none;}
 
   .app-body{position:relative;margin-top:var(--header-h);}
@@ -93,16 +100,32 @@
   .sidebar-mobile-panel .session-chip{color:#0b3438;}
   .sidebar-mobile-panel .session-chip .role-tag{background:rgba(11,52,56,.18);}
   .sidebar-mobile-panel .session-logout{border-color:rgba(11,52,56,.35);color:#0b3438;}
-  .sidebar-title{color:#fff;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin:14px 0 6px 17px;font-family:var(--font-display);}
-  .sidebar-sub{color:rgba(255,255,255,.8);font-size:11px;margin:0 17px 12px;}
-  .sidebar-group-label{color:rgba(255,255,255,.75);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;margin:14px 17px 4px;}
-  nav.tabs{display:flex;flex-direction:column;gap:0;padding:0;}
-  nav.tabs button{display:flex;align-items:center;gap:9px;width:100%;text-align:left;border:none;background:transparent;color:#fff;
-    font-family:var(--font-body);padding:9px 15px;font-size:12px;font-weight:600;cursor:pointer;transition:.15s;border-top:1px solid rgba(255,255,255,.12);}
-  nav.tabs button svg{flex:none;opacity:.92;width:15px;height:15px;}
-  nav.tabs button:not(.active):hover{background:rgba(255,255,255,.1);}
-  nav.tabs button.active{background:rgba(0,0,0,.1);font-weight:800;}
-  nav.tabs .tab-count{margin-left:auto;background:rgba(255,255,255,.25);border-radius:20px;padding:1px 7px;font-size:10px;font-weight:800;}
+  .sidebar-title{color:#fff;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin:16px 0 4px 18px;font-family:var(--font-display);}
+  .sidebar-sub{color:rgba(255,255,255,.72);font-size:10.5px;margin:0 18px 14px;font-weight:300;}
+
+  nav.tabs{display:flex;flex-direction:column;gap:2px;padding:6px 8px 10px;}
+  .sidebar-group{border-radius:9px;overflow:hidden;}
+  .sidebar-group-toggle{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;
+    background:transparent;border:none;color:rgba(255,255,255,.8);cursor:pointer;
+    padding:10px 10px 10px 12px;margin-top:6px;font-family:var(--font-body);
+    font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;transition:.15s;border-radius:7px;}
+  .sidebar-group-toggle:hover{background:rgba(255,255,255,.08);color:#fff;}
+  .sidebar-group-toggle .chevron{flex:none;width:13px;height:13px;opacity:.75;transition:transform .22s ease;}
+  .sidebar-group.collapsed .sidebar-group-toggle .chevron{transform:rotate(-90deg);}
+  .sidebar-group-body{display:grid;grid-template-rows:1fr;transition:grid-template-rows .24s ease;}
+  .sidebar-group.collapsed .sidebar-group-body{grid-template-rows:0fr;}
+  .sidebar-group-body-inner{overflow:hidden;display:flex;flex-direction:column;gap:1px;}
+
+  nav.tabs > button{display:flex;align-items:center;gap:9px;width:100%;text-align:left;border:none;background:transparent;color:#fff;
+    font-family:var(--font-body);padding:9px 12px;font-size:12px;font-weight:500;cursor:pointer;transition:.15s;border-radius:7px;}
+  .sidebar-group-body-inner button{display:flex;align-items:center;gap:9px;width:100%;text-align:left;border:none;background:transparent;color:rgba(255,255,255,.92);
+    font-family:var(--font-body);padding:8px 12px 8px 14px;font-size:11.5px;font-weight:500;cursor:pointer;transition:.15s;border-radius:7px;position:relative;}
+  nav.tabs button svg{flex:none;opacity:.85;width:15px;height:15px;}
+  nav.tabs button:not(.active):hover{background:rgba(255,255,255,.09);}
+  nav.tabs button.active{background:rgba(255,255,255,.16);font-weight:700;color:#fff;}
+  .sidebar-group-body-inner button.active::before{content:"";position:absolute;left:0;top:6px;bottom:6px;width:3px;border-radius:2px;background:#fff;}
+  nav.tabs .tab-count{margin-left:auto;background:rgba(255,255,255,.28);border-radius:20px;padding:1px 7px;font-size:9.5px;font-weight:800;}
+
 
   .content-col{margin-left:var(--sidebar-w);min-width:0;display:flex;flex-direction:column;transition:margin-left .18s ease;}
   .app-shell.sidebar-collapsed .content-col{margin-left:0;}
@@ -118,6 +141,20 @@
   p.view-sub{margin:0 0 22px;color:var(--ink-soft);font-size:13px;line-height:1.5;max-width:780px;}
   .banner{background:#EFF9FA;border:1px solid #CDEFF1;color:#0F6E75;border-radius:8px;padding:10px 14px;font-size:12px;margin-bottom:20px;display:flex;gap:8px;align-items:flex-start;}
   .banner svg{flex:none;width:15px;height:15px;margin-top:1px;}
+
+  /* ---------- Hero del Dashboard (Inicio) ---------- */
+  .dash-hero{background:linear-gradient(120deg,#1B2530,var(--navy) 55%,#2C3B4C);border-radius:var(--radius-lg);
+    padding:26px 28px;margin-bottom:22px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;
+    box-shadow:0 10px 30px rgba(20,30,40,.16);position:relative;overflow:hidden;}
+  .dash-hero::after{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;
+    background:radial-gradient(circle,rgba(45,189,201,.22),transparent 70%);pointer-events:none;}
+  .dash-hero-text h2{margin:0 0 6px;font-size:22px;font-weight:700;color:#fff;font-family:var(--font-display);letter-spacing:.2px;}
+  .dash-hero-text p{margin:0;color:#B9C3CE;font-size:12.5px;line-height:1.55;max-width:560px;font-weight:300;}
+  .dash-hero-actions{display:flex;align-items:center;gap:10px;flex:none;position:relative;z-index:1;}
+  .dash-hero-pill{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16);
+    color:#E7F8F9;border-radius:20px;padding:8px 16px;font-size:11.5px;font-weight:500;white-space:nowrap;}
+  .dash-hero-pill .dot{width:8px;height:8px;border-radius:50%;background:var(--ok);flex:none;box-shadow:0 0 0 4px rgba(63,166,107,.22);}
+  .dash-hero-pill.warn .dot{background:var(--warn);box-shadow:0 0 0 4px rgba(224,160,46,.22);}
 
   /* Dashboard cards */
   .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px;}
@@ -158,7 +195,7 @@
   .filters-row{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;margin-bottom:18px;min-width:0;}
   .filter-field{display:flex;flex-direction:column;gap:4px;min-width:0;max-width:100%;}
   .filter-field label{font-size:11px;font-weight:700;color:#333;}
-  .filter-field select,.filter-field input{height:32px;font-size:12px;font-family:var(--font-body);border:1px solid var(--input-border);border-radius:5px;padding:0 9px;background:#fff;color:var(--ink);width:100%;max-width:100%;min-width:0;box-sizing:border-box;}
+  .filter-field select,.filter-field input{height:32px;font-size:12px;font-weight:400;font-family:var(--font-body);border:1px solid var(--input-border);border-radius:5px;padding:0 9px;background:#fff;color:var(--ink);width:100%;max-width:100%;min-width:0;box-sizing:border-box;}
   .filter-field select:focus,.filter-field input:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 3px rgba(45,189,201,.15);}
   .btn{font-family:var(--font-body);font-weight:700;font-size:12px;border:none;border-radius:5px;padding:8px 16px;cursor:pointer;transition:.15s;}
   .btn-primary{background:var(--cyan);color:#fff;}.btn-primary:hover{background:var(--cyan-dark);}
@@ -196,7 +233,7 @@
   @media(max-width:760px){.form-grid{grid-template-columns:1fr;}}
   .form-field{display:flex;flex-direction:column;gap:5px;min-width:0;}
   .form-field label{font-size:11.5px;font-weight:700;color:#333;}
-  .form-field input,.form-field select,.form-field textarea{font-family:var(--font-body);font-size:12.5px;border:1px solid var(--input-border);border-radius:5px;padding:7px 9px;color:var(--ink);width:100%;max-width:100%;min-width:0;box-sizing:border-box;}
+  .form-field input,.form-field select,.form-field textarea{font-family:var(--font-body);font-weight:400;font-size:12.5px;border:1px solid var(--input-border);border-radius:5px;padding:7px 9px;color:var(--ink);width:100%;max-width:100%;min-width:0;box-sizing:border-box;}
   .form-field textarea{resize:vertical;min-height:58px;}
   .form-field input:focus,.form-field select:focus,.form-field textarea:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 3px rgba(45,189,201,.15);}
   .form-code-badge{font-size:10px;font-weight:800;color:var(--cyan-dark);background:#E7F8F9;border-radius:5px;padding:2px 8px;display:inline-block;margin-bottom:10px;}
@@ -337,13 +374,6 @@
   .app-shell{display:none;}
   .app-shell.session-active{display:block;}
 
-  /* ---------- Selector de franquicia (admin) ---------- */
-  .admin-franq-switch{display:none;align-items:center;gap:8px;}
-  .admin-franq-switch.show{display:flex;}
-  .admin-franq-switch label{color:#CCE9EB;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;}
-  .admin-franq-switch select{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);color:#fff;
-    border-radius:7px;padding:6px 10px;font-size:12px;font-weight:700;font-family:var(--font-body);}
-  .admin-franq-switch select option{color:var(--ink);}
   .session-chip{display:flex;align-items:center;gap:8px;color:#fff;font-size:11.5px;}
   .session-chip .avatar{width:26px;height:26px;border-radius:50%;background:var(--cyan);color:#0b3438;font-weight:800;
     display:flex;align-items:center;justify-content:center;font-size:11px;flex:none;}
@@ -912,8 +942,6 @@
       <div class="admin-franq-switch" id="adminFranqSwitch">
         <label>Franquicia:</label>
         <select id="adminFranqSelect"></select>
-        <label style="margin-left:10px;">Clave (Portal):</label>
-        <select id="adminFranqCodeSelect"></select>
       </div>
       <div class="topbar-badge"><span class="dot" id="topbarDot"></span> <span class="topbar-badge-text" id="topbarSyncText">Conectando…</span></div>
       <div class="topbar-title">ISO 9001:2015 · Certificado 26MS300403</div>
@@ -940,64 +968,104 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg>
           Inicio
         </button>
-        <div class="sidebar-group-label">Operación de franquicia</div>
-        <button data-view="diario">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18"/><path d="M8 2v4M16 2v4"/><path d="m8 14 2 2 4-4"/></svg>
-          Check List Diario
-        </button>
-        <button data-view="semanal">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18"/><path d="M8 2v4M16 2v4"/><path d="M7 14h3M7 18h3M14 14h3M14 18h3"/></svg>
-          Check List Semanal
-        </button>
-        <button data-view="mensual">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 10h18"/><path d="M8 2v4M16 2v4"/><path d="M7 15h10M7 18h6"/></svg>
-          Check List Mensual
-        </button>
-        <div class="sidebar-group-label">Mejora continua</div>
-        <button data-view="noconformidades">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.3 3.9 2.6 18a2 2 0 0 0 1.7 3h15.4a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
-          No Conformidades <span class="tab-count" id="ncCount">0</span>
-        </button>
-        <button data-view="subirreporte">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/></svg>
-          Subir Reporte (Ishikawa)
-        </button>
-        <div class="sidebar-group-label">Gestión de Calidad</div>
-        <button data-view="indicadores">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 15l4-6 4 3 5-8"/></svg>
-          Indicadores del SGC
-        </button>
-        <button data-view="auditorias">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18"/><path d="M8 2v4M16 2v4"/><circle cx="16" cy="15" r="2"/><path d="m17.5 16.5 1.5 1.5"/></svg>
-          Calendario de Auditorías
-        </button>
-        <button data-view="auditlog" id="navAuditLog" style="display:none;">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/></svg>
-          Auditoría del Sistema
-        </button>
-        <div id="calidadTabsContainer"></div>
-        <div class="sidebar-group-label">Gestión de Proyectos</div>
-        <button data-view="proyectos">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="7" height="7" rx="1.5"/><rect x="14" y="4" width="7" height="4" rx="1.5"/><rect x="14" y="11" width="7" height="9" rx="1.5"/><rect x="3" y="14" width="7" height="6" rx="1.5"/></svg>
-          Proyectos ISO
-        </button>
-        <button data-view="comunicados">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-          Comunicados <span class="tab-count" id="comCount">0</span>
-        </button>
-        <div class="sidebar-group-label">Documentación</div>
-        <button data-view="documentos">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12h6M9 16h6M9 8h1"/><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/></svg>
-          Documentos Maestro
-        </button>
-        <button data-view="procedimientos">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg>
-          Biblioteca del SGC
-        </button>
-        <button data-view="reportes">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z"/><path d="M9 13h6M9 17h4"/></svg>
-          Reportes
-        </button>
+
+        <div class="sidebar-group" data-group="operacion">
+          <button type="button" class="sidebar-group-toggle">
+            <span>Operación de Franquicia</span>
+            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="sidebar-group-body"><div class="sidebar-group-body-inner">
+            <button data-view="diario">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18"/><path d="M8 2v4M16 2v4"/><path d="m8 14 2 2 4-4"/></svg>
+              Check List Diario
+            </button>
+            <button data-view="semanal">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18"/><path d="M8 2v4M16 2v4"/><path d="M7 14h3M7 18h3M14 14h3M14 18h3"/></svg>
+              Check List Semanal
+            </button>
+            <button data-view="mensual">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 10h18"/><path d="M8 2v4M16 2v4"/><path d="M7 15h10M7 18h6"/></svg>
+              Check List Mensual
+            </button>
+          </div></div>
+        </div>
+
+        <div class="sidebar-group" data-group="mejora">
+          <button type="button" class="sidebar-group-toggle">
+            <span>Mejora Continua</span>
+            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="sidebar-group-body"><div class="sidebar-group-body-inner">
+            <button data-view="noconformidades">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.3 3.9 2.6 18a2 2 0 0 0 1.7 3h15.4a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+              No Conformidades <span class="tab-count" id="ncCount">0</span>
+            </button>
+            <button data-view="subirreporte">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/></svg>
+              Subir Reporte (Ishikawa)
+            </button>
+          </div></div>
+        </div>
+
+        <div class="sidebar-group" data-group="calidad">
+          <button type="button" class="sidebar-group-toggle">
+            <span>Gestión de Calidad</span>
+            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="sidebar-group-body"><div class="sidebar-group-body-inner">
+            <button data-view="indicadores">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 15l4-6 4 3 5-8"/></svg>
+              Indicadores del SGC
+            </button>
+            <button data-view="auditorias">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18"/><path d="M8 2v4M16 2v4"/><circle cx="16" cy="15" r="2"/><path d="m17.5 16.5 1.5 1.5"/></svg>
+              Calendario de Auditorías
+            </button>
+            <button data-view="auditlog" id="navAuditLog" style="display:none;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/></svg>
+              Auditoría del Sistema
+            </button>
+            <div id="calidadTabsContainer"></div>
+          </div></div>
+        </div>
+
+        <div class="sidebar-group" data-group="proyectos">
+          <button type="button" class="sidebar-group-toggle">
+            <span>Gestión de Proyectos</span>
+            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="sidebar-group-body"><div class="sidebar-group-body-inner">
+            <button data-view="proyectos">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="7" height="7" rx="1.5"/><rect x="14" y="4" width="7" height="4" rx="1.5"/><rect x="14" y="11" width="7" height="9" rx="1.5"/><rect x="3" y="14" width="7" height="6" rx="1.5"/></svg>
+              Proyectos ISO
+            </button>
+            <button data-view="comunicados">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+              Comunicados <span class="tab-count" id="comCount">0</span>
+            </button>
+          </div></div>
+        </div>
+
+        <div class="sidebar-group" data-group="documentacion">
+          <button type="button" class="sidebar-group-toggle">
+            <span>Documentación</span>
+            <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="sidebar-group-body"><div class="sidebar-group-body-inner">
+            <button data-view="documentos">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12h6M9 16h6M9 8h1"/><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/></svg>
+              Documentos Maestro
+            </button>
+            <button data-view="procedimientos">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></svg>
+              Biblioteca del SGC
+            </button>
+            <button data-view="reportes">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z"/><path d="M9 13h6M9 17h4"/></svg>
+              Reportes
+            </button>
+          </div></div>
+        </div>
       </nav>
     </div>
 
@@ -1011,8 +1079,18 @@
 
         <!-- ===================== INICIO ===================== -->
         <div class="view active" id="view-inicio">
-          <h2 class="view-title">Panel de Control del SGC</h2>
-          <p class="view-sub">Resumen del cumplimiento de calidad en franquicias y acceso a la documentación completa del Sistema de Gestión de Calidad de Purifika.</p>
+          <div class="dash-hero">
+            <div class="dash-hero-text">
+              <h2>Panel de Control del SGC</h2>
+              <p>Resumen del cumplimiento de calidad en franquicias y acceso a la documentación completa del Sistema de Gestión de Calidad de Purifika.</p>
+            </div>
+            <div class="dash-hero-actions">
+              <div class="dash-hero-pill" id="syncBanner">
+                <span class="dot" id="syncBannerDot"></span>
+                <span id="syncBannerText">Conectando…</span>
+              </div>
+            </div>
+          </div>
 
           <div class="cert-card">
             <div class="cert-left">
@@ -1025,11 +1103,6 @@
               </div>
             </div>
             <a href="https://drive.google.com/drive/folders/1R4Yc5xz1iiUCB8qPMdryhmeJpOS7eEh-" target="_blank" rel="noopener">Ver certificado</a>
-          </div>
-
-          <div class="banner" id="syncBanner">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-            <span id="syncBannerText">Conectando con Google Sheets…</span>
           </div>
 
           <div class="kpi-grid">
@@ -1709,8 +1782,13 @@
   }
 
   /* =====================================================================
-     FRANQUICIAS — catálogo real (37), extraído de
+     FRANQUICIAS — catálogo de nombres largos (37), extraído de
      Cobertura_de_Franquicias_Purifika_BBVA.xlsx, hoja "Franquicias Purifika".
+     Se usa solo para el modal de Auditorías (populateAudFranquiciaSelect_),
+     que históricamente guarda el nombre largo. El interruptor del topbar y
+     el resto de los formularios nuevos (No Conformidades, Proyectos ISO)
+     usan la CLAVE corta (ver FRANQUICIAS_CLAVE_PORTAL) para que en todo el
+     sistema se elija de la misma lista corta y no haya que escribir nada.
      ===================================================================== */
   const FRANQUICIAS = ["Purifika Aguascalientes","Purifika Aguascalientes 2","Purifika Tijuana","Purifika Los Cabos",
     "Purifika Tuxtla","Purifika Cd. Juárez","Purifika Chihuahua","Purifika DF1","Purifika DF3","Purifika DF4",
@@ -1720,9 +1798,24 @@
     "Purifika Cancún","Purifika San Luis","Purifika Culiacán 2","Purifika Los Mochis","Purifika Guaymas",
     "Purifika Hermosillo","Purifika Nogales","Purifika Obregón","Purifika Reynosa","Purifika Veracruz","Purifika Mérida"];
 
+  /* =====================================================================
+     CLAVES DE FRANQUICIA (PORTAL) — lista exacta y definitiva que Eduardo
+     proporcionó por capturas de pantalla (corregida el 26/ago/2026: sin
+     claves de distribuidor "-D", sin CDJ, CHIH2, CUL, LPZ, PURIFIKA, QRO3,
+     TAM, TRC, TRC2, VHS). Se usa ÚNICAMENTE esta lista, en este orden.
+     Esta es AHORA la única lista de franquicia que se ve en el topbar
+     (antes había dos selectores redundantes: "Franquicia" con nombres
+     largos y "Clave (Portal)" con esta lista corta; se unificaron en uno
+     solo el 2/sep/2026 para ahorrar espacio y simplificar la interfaz).
+     ===================================================================== */
+  const FRANQUICIAS_CLAVE_PORTAL = ["AGS","AGS2","BJX","CDMX1","CDMX2","CDMX3","CDMX4",
+    "CHIH","CJS","CUL2","CUN","GDL","GUA","GYM","HMO","IPTO","LMM","MID","MLM",
+    "MTY","NOG","OBR","PCA","PDS","PUE","PUE2","QRO1","QRO2","REX","SJD","SLP",
+    "SLP2","SLW","TGZ","TIJ","TRC3","VER","Otro…"];
+
   (function fillAdminFranqSelect_(){
     const sel = document.getElementById("adminFranqSelect");
-    sel.innerHTML = `<option value="">— Todas —</option>` + FRANQUICIAS.map(f => `<option>${esc(f)}</option>`).join("");
+    sel.innerHTML = `<option value="">— Todas —</option>` + FRANQUICIAS_CLAVE_PORTAL.map(f => `<option>${esc(f)}</option>`).join("");
     sel.addEventListener("change", () => {
       state.franquiciaActiva = sel.value;
       indicadoresVivoIntentado_ = false;
@@ -1731,33 +1824,9 @@
     });
   })();
 
-  /* =====================================================================
-     CLAVES DE FRANQUICIA (PORTAL) — lista exacta y definitiva que Eduardo
-     proporcionó por capturas de pantalla (corregida el 26/ago/2026: sin
-     claves de distribuidor "-D", sin CDJ, CHIH2, CUL, LPZ, PURIFIKA, QRO3,
-     TAM, TRC, TRC2, VHS). Se usa ÚNICAMENTE esta lista, en este orden.
-     Esta clave es la que usa el portal para TDS por código postal y para
-     el sistema de tickets; NO es 1:1 con los nombres largos de
-     FRANQUICIAS de arriba (ese es el catálogo del SGC-FM-F-FR-18). Por
-     ahora este selector es de referencia/cruce — dime si quieres que
-     filtre indicadores/auditorías igual que el de arriba, o que se
-     enlace automáticamente con el nombre largo correspondiente.
-     ===================================================================== */
-  const FRANQUICIAS_CLAVE_PORTAL = ["AGS","AGS2","BJX","CDMX1","CDMX2","CDMX3","CDMX4",
-    "CHIH","CJS","CUL2","CUN","GDL","GUA","GYM","HMO","IPTO","LMM","MID","MLM",
-    "MTY","NOG","OBR","PCA","PDS","PUE","PUE2","QRO1","QRO2","REX","SJD","SLP",
-    "SLP2","SLW","TGZ","TIJ","TRC3","VER","Otro…"];
-
-  (function fillAdminFranqCodeSelect_(){
-    const sel = document.getElementById("adminFranqCodeSelect");
-    if(!sel) return;
-    sel.innerHTML = `<option value="">— Todas —</option>` +
-      FRANQUICIAS_CLAVE_PORTAL.map(c => `<option>${esc(c)}</option>`).join("");
-  })();
-
   /* ---------- Selects de clave de franquicia reutilizables ----------
      Mismo listado (FRANQUICIAS_CLAVE_PORTAL) que usa el filtro de admin
-     "CLAVE (PORTAL)", para que en todo el sistema se elija la franquicia
+     "Franquicia" del topbar, para que en todo el sistema se elija la franquicia
      de una lista en vez de escribirla a mano. extraOptions permite
      agregar opciones especiales al inicio (ej. "SGC (matriz)", "Todas"). */
   function fillFranquiciaClaveSelect_(selId, extraOptions){
@@ -2111,9 +2180,15 @@
 
   function auditoriasFiltradas_(){
     const fTipo = document.getElementById("audFiltroTipo").value, fEstatus = document.getElementById("audFiltroEstatus").value;
-    return state.auditorias.filter(a =>
-      (!fTipo || a.tipo === fTipo) && (!fEstatus || a.estatus === fEstatus) &&
-      (!state.franquiciaActiva || a.franquicia === state.franquiciaActiva || a.franquicia === "Franquicia Maestra"));
+    // Nota: el interruptor de Franquicia del topbar ahora usa la CLAVE corta
+    // (AGS, MTY, GDL...), pero las auditorías guardan el nombre largo
+    // ("Purifika Monterrey") porque su propio modal usa ese catálogo. No hay
+    // un cruce 1:1 confiable entre clave y nombre largo todavía, así que el
+    // interruptor del topbar ya NO filtra este listado (para no mostrar
+    // "0 auditorías" por un cruce que en realidad no aplicó). El filtro por
+    // franquicia específica de una auditoría se sigue haciendo, como antes,
+    // al crearla/editarla desde el modal (campo Franquicia del formulario).
+    return state.auditorias.filter(a => (!fTipo || a.tipo === fTipo) && (!fEstatus || a.estatus === fEstatus));
   }
 
   function renderAuditorias(){
@@ -2240,7 +2315,7 @@
       meta.textContent = (mp ? ("Última modificación por " + mp) : "") + (a.gcalEventId ? " · Vinculada a Google Calendar" : "");
     } else {
       document.getElementById("audModalTitle").textContent = "Nueva auditoría";
-      document.getElementById("audFFranquicia").value = state.franquiciaActiva || "Franquicia Maestra";
+      document.getElementById("audFFranquicia").value = "Franquicia Maestra";
       document.getElementById("audFFecha").value = presetDate || "";
       document.getElementById("audFTipo").value = "interna";
       document.getElementById("audFAlcance").value = "";
@@ -2522,6 +2597,7 @@
       t.classList.toggle("active", match);
     });
     breadcrumbCurrent.textContent = labels[view] || view;
+    expandSidebarGroupFor_(view);
     if(view === "inicio") renderDashboard();
     if(view === "indicadores") renderIndicadores();
     if(view === "auditorias") renderAuditorias();
@@ -2530,6 +2606,40 @@
     if(view === "proyectos"){ pryShowList_(); cargarProyectos_(); }
     if(view === "documentos") cargarDocumentos_();
     if(view === "comunicados") cargarComunicados_();
+  }
+
+  /* =====================================================================
+     MENÚ LATERAL PLEGABLE (acordeón) — cada .sidebar-group se puede
+     abrir/cerrar con clic en su encabezado. El estado se recuerda en
+     localStorage (por grupo) para que la próxima vez que la persona
+     entre, el menú se vea como lo dejó. Si se navega a una vista que
+     vive dentro de un grupo cerrado, ese grupo se abre solo para que
+     el botón activo siempre sea visible. ===================================================================== */
+  const SIDEBAR_GROUP_STATE_PREFIX = "sgc_navgroup_";
+  const sidebarGroups = Array.from(document.querySelectorAll(".sidebar-group"));
+
+  function setSidebarGroupCollapsed_(groupEl, collapsed, persist){
+    groupEl.classList.toggle("collapsed", collapsed);
+    if(persist){
+      try{ localStorage.setItem(SIDEBAR_GROUP_STATE_PREFIX + groupEl.dataset.group, collapsed ? "1" : "0"); }catch(e){}
+    }
+  }
+
+  sidebarGroups.forEach(groupEl => {
+    let saved = null;
+    try{ saved = localStorage.getItem(SIDEBAR_GROUP_STATE_PREFIX + groupEl.dataset.group); }catch(e){}
+    setSidebarGroupCollapsed_(groupEl, saved === "1", false);
+    const toggleBtn = groupEl.querySelector(".sidebar-group-toggle");
+    toggleBtn.addEventListener("click", () => {
+      setSidebarGroupCollapsed_(groupEl, !groupEl.classList.contains("collapsed"), true);
+    });
+  });
+
+  function expandSidebarGroupFor_(view){
+    const activeBtn = navTabsEl.querySelector('button[data-view="' + view + '"]');
+    if(!activeBtn) return;
+    const groupEl = activeBtn.closest(".sidebar-group");
+    if(groupEl && groupEl.classList.contains("collapsed")) setSidebarGroupCollapsed_(groupEl, false, true);
   }
   navTabsEl.addEventListener("click", (e) => {
     const btn = e.target.closest("button[data-view]");
@@ -3038,11 +3148,13 @@
     const dot = document.getElementById("topbarDot");
     const topText = document.getElementById("topbarSyncText");
     const banner = document.getElementById("syncBanner");
+    const bannerDot = document.getElementById("syncBannerDot");
     const bannerText = document.getElementById("syncBannerText");
     if(dot) dot.style.background = ok ? "var(--ok)" : "var(--warn)";
     if(topText) topText.textContent = text;
     if(bannerText) bannerText.textContent = text;
-    if(banner) banner.style.background = ok ? "#EFF9FA" : "#FFF7E8";
+    if(bannerDot) bannerDot.style.background = ok ? "var(--ok)" : "var(--warn)";
+    if(banner) banner.classList.toggle("warn", !ok);
   }
 
   function hydrateFromBackend_(data){
