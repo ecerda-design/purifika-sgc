@@ -300,6 +300,17 @@
   .login-card h1{font-family:var(--font-body);font-weight:400;font-size:16px;color:#8A93AB;margin:0 0 22px;}
   #loginForm{display:flex;flex-direction:column;gap:0;text-align:left;}
   .login-field{display:flex;align-items:center;gap:10px;border-bottom:1px solid #DCE6E8;padding:9px 2px;margin-bottom:22px;}
+  .login-field .pw-eye-btn{background:none;border:none;padding:2px;cursor:pointer;color:#8a97a0;flex:none;display:flex;}
+  .login-field .pw-eye-btn:hover{color:var(--cyan-dark);}
+  .login-field .pw-eye-btn svg{width:18px;height:18px;}
+  /* Campos de contraseña dentro de modales (aud-modal-body): input con
+     espacio a la derecha para el botón de ojo, posicionado encima. */
+  .pw-field{position:relative;}
+  .pw-field input{padding-right:34px !important;}
+  .pw-field .pw-eye-btn{position:absolute;right:6px;top:50%;transform:translateY(-50%);background:none;border:none;
+    padding:4px;cursor:pointer;color:#8a97a0;display:flex;}
+  .pw-field .pw-eye-btn:hover{color:var(--cyan-dark);}
+  .pw-field .pw-eye-btn svg{width:16px;height:16px;}
   .login-field svg{flex:none;width:19px;height:19px;color:#8FCBD1;}
   .login-field input{border:none;outline:none;flex:1;font-size:13.5px;font-family:var(--font-body);color:#54565A;background:transparent;}
   .login-field input::placeholder{color:#A9B4B6;}
@@ -645,7 +656,8 @@
       </div>
       <div class="login-field">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0"/></svg>
-        <input type="password" id="loginPassword" autocomplete="current-password" placeholder="Contraseña">
+        <input type="password" id="loginPassword" autocomplete="current-password" placeholder="Contraseña" style="flex:1;min-width:0;">
+        <button type="button" class="pw-eye-btn" data-pw-toggle="loginPassword" aria-label="Mostrar contraseña"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg></button>
       </div>
       <div id="loginError"></div>
       <button type="submit" class="btn-login">LOGIN</button>
@@ -968,7 +980,10 @@
       </div>
       <div>
         <label id="usrFPasswordLabel">Contraseña inicial</label>
-        <input type="password" id="usrFPassword" placeholder="Mínimo 6 caracteres" autocomplete="new-password">
+        <div class="pw-field">
+          <input type="password" id="usrFPassword" placeholder="Mínimo 6 caracteres" autocomplete="new-password">
+          <button type="button" class="pw-eye-btn" data-pw-toggle="usrFPassword" aria-label="Mostrar contraseña"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg></button>
+        </div>
       </div>
     </div>
     <div class="aud-modal-foot">
@@ -1026,15 +1041,24 @@
       <div class="aud-modal-error" id="cambiarPassError"></div>
       <div>
         <label>Contraseña actual</label>
-        <input type="password" id="cambiarPassActual" autocomplete="current-password">
+        <div class="pw-field">
+          <input type="password" id="cambiarPassActual" autocomplete="current-password">
+          <button type="button" class="pw-eye-btn" data-pw-toggle="cambiarPassActual" aria-label="Mostrar contraseña"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg></button>
+        </div>
       </div>
       <div>
         <label>Nueva contraseña</label>
-        <input type="password" id="cambiarPassNueva" autocomplete="new-password" placeholder="Mínimo 6 caracteres">
+        <div class="pw-field">
+          <input type="password" id="cambiarPassNueva" autocomplete="new-password" placeholder="Mínimo 6 caracteres">
+          <button type="button" class="pw-eye-btn" data-pw-toggle="cambiarPassNueva" aria-label="Mostrar contraseña"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg></button>
+        </div>
       </div>
       <div>
         <label>Confirmar nueva contraseña</label>
-        <input type="password" id="cambiarPassConfirmar" autocomplete="new-password">
+        <div class="pw-field">
+          <input type="password" id="cambiarPassConfirmar" autocomplete="new-password">
+          <button type="button" class="pw-eye-btn" data-pw-toggle="cambiarPassConfirmar" aria-label="Mostrar contraseña"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg></button>
+        </div>
       </div>
     </div>
     <div class="aud-modal-foot">
@@ -1332,6 +1356,7 @@
             <div class="filter-field"><label>Semana</label>
               <select id="diarioSemana"><option>Semana 1</option><option>Semana 2</option><option>Semana 3</option><option>Semana 4</option><option>Semana 5</option></select>
             </div>
+            <button class="btn btn-primary" id="guardarDiarioBtn">Guardar cambios</button>
             <button class="btn btn-primary" id="exportDiarioPdf">Exportar semana a PDF</button>
           </div>
 
@@ -1344,6 +1369,7 @@
           <p class="view-sub">Revisión de arqueos semanales (AER-F-PR-01). Registra la fecha de revisión y comentarios de cada semana del mes.</p>
           <div class="filters-row">
             <div class="filter-field"><label>Mes</label><input type="month" id="semanalMes"></div>
+            <button class="btn btn-primary" id="guardarSemanalBtn">Guardar cambios</button>
           </div>
           <div id="semanalContainer"></div>
         </div>
@@ -1354,6 +1380,7 @@
           <p class="view-sub">Actividades de verificación con periodicidad mensual del Sistema de Gestión de Calidad.</p>
           <div class="filters-row">
             <div class="filter-field"><label>Mes</label><input type="month" id="mensualMes"></div>
+            <button class="btn btn-primary" id="guardarMensualBtn">Guardar cambios</button>
           </div>
           <div id="mensualContainer"></div>
         </div>
@@ -1455,7 +1482,7 @@
         <div class="view" id="view-indicadores">
           <h2 class="view-title">Tablero de Objetivos e Indicadores del SGC · SGC-FM-F-FR-18</h2>
           <p class="view-sub">36 indicadores oficiales del Sistema de Gestión de Calidad, agrupados por proceso. Origen: catálogo maestro en Drive (responsable Karen Astorga, Coordinadora del SGC).</p>
-          <div class="draft-banner" id="indDraftBanner">⚠️ Borrador: la columna "Resultado" se muestra tal como está capturada en el tablero de Drive (último mes disponible). Falta conectar la captura mensual en vivo (RQ-014) para que se actualice automáticamente por franquicia y periodo.</div>
+          <div class="draft-banner" id="indDraftBanner" style="background:#EEF1F4;border-color:#DCE2E9;color:#5B6673;">⏳ Cargando indicadores…</div>
 
           <div class="ind-filters">
             <select id="indPeriodoFilter"><option value="">Periodo: último disponible</option></select>
@@ -2249,10 +2276,16 @@
           banner.style.background = "#EAF7EF"; banner.style.color = "#256B3E"; banner.style.borderColor = "#BFE6CC";
         }
         renderIndicadores();
+      } else if(banner){
+        banner.textContent = "ℹ️ Sin datos capturados todavía para esta franquicia/periodo — se muestra el catálogo de referencia.";
+        banner.style.background = "#EEF1F4"; banner.style.color = "#5B6673"; banner.style.borderColor = "#DCE2E9";
       }
-      // Si el backend no tiene la acción "indicadoresVivo" todavía, res.ok
-      // vendrá false o el fetch tronará abajo: dejamos el borrador como está.
-    }).catch(() => { /* backend sin esa acción todavía — se queda el borrador */ });
+    }).catch(() => {
+      if(banner){
+        banner.textContent = "⚠️ No se pudo conectar con la captura en vivo — se muestra el catálogo de referencia.";
+        banner.style.background = "#FFF6E5"; banner.style.color = "#8a6d1f"; banner.style.borderColor = "#F0D48A";
+      }
+    });
   }
 
   const chartInstances = {};
@@ -3512,6 +3545,53 @@
       setSyncStatus_(false, "Sin conexión al backend; usando datos locales.");
     });
   }
+
+  /* ---------- Botón "Guardar cambios" en los checklists ---------- */
+  const guardarDiarioBtnEl = document.getElementById("guardarDiarioBtn");
+  if(guardarDiarioBtnEl) guardarDiarioBtnEl.addEventListener("click", () => {
+    DIARIO_ITEMS.forEach(it => persistDiarioMark_(it.id, null));
+    toast_("Check list diario guardado.", "success");
+  });
+  const guardarSemanalBtnEl = document.getElementById("guardarSemanalBtn");
+  if(guardarSemanalBtnEl) guardarSemanalBtnEl.addEventListener("click", () => {
+    Object.keys(state.semanal).forEach(key => {
+      const partes = key.split("_");
+      const itemId = partes[0], semana = partes[1];
+      const it = SEMANAL_ITEMS.find(x => x.id === itemId);
+      const rec = state.semanal[key] || {};
+      apiPost("saveSemanal", {
+        itemId, actividad: it ? it.text : "", procedimiento: it ? it.proc : "",
+        semana, mes: document.getElementById("semanalMes").value,
+        fecha: rec.fecha || "", comentarios: rec.comentarios || ""
+      }).catch(() => {});
+    });
+    toast_("Check list semanal guardado.", "success");
+  });
+  const guardarMensualBtnEl = document.getElementById("guardarMensualBtn");
+  if(guardarMensualBtnEl) guardarMensualBtnEl.addEventListener("click", () => {
+    Object.keys(state.mensual).forEach(key => {
+      const it = MENSUAL_ITEMS.find(x => x.id === key);
+      const rec = state.mensual[key] || {};
+      apiPost("saveMensual", {
+        itemId: key, actividad: it ? it.text : "", procedimiento: it ? it.proc : "",
+        mes: document.getElementById("mensualMes").value,
+        fecha: rec.fecha || "", comentarios: rec.comentarios || ""
+      }).catch(() => {});
+    });
+    toast_("Check list mensual guardado.", "success");
+  });
+
+  /* ---------- Botón de "ojo" para mostrar/ocultar contraseñas ---------- */
+  document.querySelectorAll("[data-pw-toggle]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const input = document.getElementById(btn.dataset.pwToggle);
+      if(!input) return;
+      const showing = input.type === "text";
+      input.type = showing ? "password" : "text";
+      btn.innerHTML = showing ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg>` : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 7 11 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.53 13.53 0 0 0 1 11s4 7 11 7a9.1 9.1 0 0 0 5.39-1.61"/><path d="M9.53 9.53a3 3 0 0 0 4.24 4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`;
+      btn.setAttribute("aria-label", showing ? "Mostrar contraseña" : "Ocultar contraseña");
+    });
+  });
 
   /* ---------- Init ---------- */
   // Nota: syncWithBackend() NO se llama aquí. El backend exige sesión valida
