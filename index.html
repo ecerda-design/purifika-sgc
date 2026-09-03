@@ -37,19 +37,20 @@
   .topbar-brand-zone{width:var(--sidebar-w);flex:none;background:rgba(0,0,0,.16);display:flex;align-items:center;min-width:0;padding:0 12px;}
   .topbar-brand{display:flex;align-items:center;min-width:0;flex:1 1 auto;margin-left:6px;overflow:hidden;}
   .topbar-logo{height:36px;width:auto;max-width:100%;flex:none;display:block;object-fit:contain;}
-  .sidebar-toggle-btn{width:34px;height:34px;flex:none;border-radius:50px;border:none;background:rgba(255,255,255,.14);color:#fff;
+  /* ---------- Header plano, estilo portal Purifika: los botones/iconos van
+     "sueltos" sobre el fondo oscuro, sin círculo ni borde delineándolos.
+     Solo aparece un fondo sutil al pasar el mouse (hover), como feedback. ---------- */
+  .sidebar-toggle-btn{width:34px;height:34px;flex:none;border-radius:8px;border:none;background:transparent;color:#fff;
     display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.18s;margin-left:auto;}
-  .sidebar-toggle-btn:hover{background:var(--cyan);color:#0E3538;}
-  .sidebar-toggle-btn svg{width:16px;height:16px;}
-  .topbar-content-zone{flex:1;display:flex;align-items:center;justify-content:flex-end;padding:0 16px;min-width:0;gap:16px;overflow:hidden;}
+  .sidebar-toggle-btn:hover{background:rgba(255,255,255,.12);}
+  .sidebar-toggle-btn svg{width:18px;height:18px;}
+  .topbar-content-zone{flex:1;display:flex;align-items:center;justify-content:flex-end;padding:0 16px;min-width:0;gap:20px;overflow:hidden;}
   .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
-  /* El estado de conexión ahora es solo un punto (verde=ok, ámbar/rojo=falla),
-     sin texto visible — el detalle queda en el atributo title (tooltip) para
-     quien lo necesite, y para lectores de pantalla vía .sr-only. Menos ruido
-     visual en el topbar, como se pidió. */
-  .topbar-badge{display:flex;align-items:center;justify-content:center;flex:none;
-    width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);cursor:default;}
-  .topbar-badge .dot{width:9px;height:9px;border-radius:50%;background:var(--ok);flex:none;box-shadow:0 0 0 4px rgba(63,166,107,.22);}
+  /* El estado de conexión es solo un punto (verde=ok, rojo=falla), suelto
+     sobre el fondo, sin círculo/borde alrededor — el detalle queda en el
+     atributo title (tooltip) y en .sr-only para lectores de pantalla. */
+  .topbar-badge{display:flex;align-items:center;justify-content:center;flex:none;cursor:default;}
+  .topbar-badge .dot{width:9px;height:9px;border-radius:50%;background:var(--ok);flex:none;box-shadow:0 0 0 4px rgba(63,166,107,.18);}
   .topbar-title{color:#B9C3CE;font-size:11.5px;font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:0 1 auto;min-width:0;}
   /* Franja intermedia: en vez de un solo corte binario a 760px, vamos degradando
      progresivamente lo menos importante primero para que nada se encime nunca. */
@@ -396,18 +397,21 @@
   .app-shell.session-active{display:block;}
 
   .session-chip{display:flex;align-items:center;gap:8px;color:#fff;font-size:11.5px;}
-  .session-chip .avatar{width:28px;height:28px;border-radius:50%;background:var(--cyan);color:#fff;font-weight:800;
+  .session-chip .avatar{width:30px;height:30px;border-radius:50%;background:var(--cyan);color:#fff;font-weight:800;
     display:flex;align-items:center;justify-content:center;font-size:11px;flex:none;overflow:hidden;}
   .session-chip .avatar img{width:100%;height:100%;object-fit:cover;}
-  .session-chip .role-tag{background:rgba(255,255,255,.18);border-radius:20px;padding:1px 8px;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.3px;}
 
-  /* ---------- Menú de sesión (Mi perfil / Editar perfil / Cambiar Contraseña) ---------- */
+  /* ---------- Menú de sesión (Mi perfil / Editar perfil / Cambiar Contraseña) ----------
+     Sin pill/fondo delineando el conjunto (avatar+nombre+flecha) — van
+     "sueltos" sobre el fondo oscuro del header, como en el portal Purifika.
+     Solo se ve un fondo sutil al pasar el mouse, igual que cualquier botón
+     de esta barra. */
   .session-menu{position:relative;}
-  .session-menu-btn{display:flex;align-items:center;gap:9px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);
-    border-radius:22px;padding:4px 12px 4px 4px;cursor:pointer;transition:.15s;font-family:var(--font-body);}
-  .session-menu-btn:hover{background:rgba(255,255,255,.12);}
+  .session-menu-btn{display:flex;align-items:center;gap:8px;background:transparent;border:none;
+    border-radius:8px;padding:4px 8px 4px 4px;cursor:pointer;transition:.15s;font-family:var(--font-body);}
+  .session-menu-btn:hover{background:rgba(255,255,255,.1);}
   .session-menu-text{display:flex;flex-direction:column;align-items:flex-start;gap:1px;line-height:1.15;}
-  .session-menu-text span:first-child{font-size:12px;font-weight:700;color:#fff;white-space:nowrap;}
+  .session-menu-text span:first-child{font-size:12.5px;font-weight:700;color:#fff;white-space:nowrap;}
   .session-menu-btn .chevron{width:13px;height:13px;color:rgba(255,255,255,.6);flex:none;transition:transform .18s;}
   .session-menu.open .session-menu-btn .chevron{transform:rotate(180deg);}
   /* position:fixed (NO absolute) a propósito: el topbar tiene overflow:hidden
@@ -424,10 +428,15 @@
     color:var(--ink);font-family:var(--font-body);font-size:12.5px;font-weight:500;padding:9px 10px;border-radius:7px;cursor:pointer;transition:.12s;}
   .session-dropdown button:hover{background:var(--mist);}
   .session-dropdown button svg{width:16px;height:16px;flex:none;color:var(--cyan-dark);}
-  .session-logout{background:transparent;border:1px solid rgba(255,255,255,.3);color:#fff;border-radius:50%;
+  .session-logout{background:transparent;border:none;color:#fff;border-radius:8px;
     width:32px;height:32px;flex:none;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.15s;}
-  .session-logout svg{width:15px;height:15px;}
-  .session-logout:hover{background:rgba(255,255,255,.14);border-color:var(--cyan);}
+  .session-logout svg{width:16px;height:16px;}
+  .session-logout:hover{background:rgba(255,255,255,.12);}
+
+  /* ---------- Avatar grande (modales Mi perfil / Editar perfil) ---------- */
+  .perfil-avatar-lg{width:64px;height:64px;border-radius:50%;background:var(--cyan);color:#fff;font-weight:800;
+    font-size:20px;display:flex;align-items:center;justify-content:center;flex:none;overflow:hidden;}
+  .perfil-avatar-lg img{width:100%;height:100%;object-fit:cover;}
 
   /* ---------- Indicadores ---------- */
   .ind-filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
@@ -996,31 +1005,42 @@
 </div>
 
 <div id="verPerfilModal">
-  <div class="aud-modal-box" style="max-width:400px;">
+  <div class="aud-modal-box" style="max-width:460px;">
     <div class="aud-modal-head">
       <h3>Mi perfil</h3>
       <button class="terms-box-close" id="verPerfilCloseX" aria-label="Cerrar">&times;</button>
     </div>
     <div class="aud-modal-body">
-      <div>
-        <label>Nombre</label>
-        <input type="text" id="verPerfilNombre" disabled>
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:6px;">
+        <div class="perfil-avatar-lg" id="verPerfilAvatar">?</div>
+        <div>
+          <div style="font-size:15px;font-weight:700;color:var(--navy);" id="verPerfilNombreCompleto"></div>
+          <div style="font-size:11.5px;color:var(--ink-soft);" id="verPerfilUsuarioSub"></div>
+        </div>
       </div>
-      <div>
-        <label>Usuario</label>
-        <input type="text" id="verPerfilUsuario" disabled>
+      <div class="aud-modal-row">
+        <div><label>Nombre</label><input type="text" id="verPerfilNombre" disabled></div>
+        <div><label>Apellido Paterno</label><input type="text" id="verPerfilApPaterno" disabled></div>
       </div>
-      <div>
-        <label>Rol</label>
-        <input type="text" id="verPerfilRol" disabled>
+      <div class="aud-modal-row">
+        <div><label>Apellido Materno</label><input type="text" id="verPerfilApMaterno" disabled></div>
+        <div><label>Correo electrónico</label><input type="text" id="verPerfilCorreo" disabled></div>
       </div>
-      <div>
-        <label>Franquicia(s)</label>
-        <input type="text" id="verPerfilFranquicias" disabled>
+      <div class="aud-modal-row">
+        <div><label>Teléfono Móvil</label><input type="text" id="verPerfilTelefono" disabled></div>
+        <div><label>Departamento</label><input type="text" id="verPerfilDepartamento" disabled></div>
       </div>
-      <div>
-        <label>Correo</label>
-        <input type="text" id="verPerfilCorreo" disabled>
+      <div class="aud-modal-row">
+        <div><label>Franquicia</label><input type="text" id="verPerfilFranquicias" disabled></div>
+        <div><label>Género</label><input type="text" id="verPerfilGenero" disabled></div>
+      </div>
+      <div class="aud-modal-row">
+        <div><label>Día / Mes de Nacimiento</label><input type="text" id="verPerfilFechaNacimiento" disabled></div>
+        <div><label>Puesto</label><input type="text" id="verPerfilPuesto" disabled></div>
+      </div>
+      <div class="aud-modal-row">
+        <div><label>Perfil</label><input type="text" id="verPerfilPerfil" disabled></div>
+        <div><label>Fecha de Ingreso</label><input type="text" id="verPerfilFechaIngreso" disabled></div>
       </div>
     </div>
     <div class="aud-modal-foot">
@@ -1071,26 +1091,53 @@
 </div>
 
 <div id="miPerfilModal">
-  <div class="aud-modal-box" style="max-width:400px;">
+  <div class="aud-modal-box" style="max-width:460px;">
     <div class="aud-modal-head">
       <h3>Editar perfil</h3>
       <button class="terms-box-close" id="miPerfilCloseX" aria-label="Cerrar">&times;</button>
     </div>
     <div class="aud-modal-body">
       <div class="aud-modal-error" id="miPerfilError"></div>
-      <p style="margin:0 0 4px;font-size:12px;color:var(--ink-soft);">Captura tu correo una sola vez aquí. A partir de eso, cada vez que te elijan como líder en una auditoría, tu correo se completa solo (y te invita a Google Calendar si se vincula el evento).</p>
-      <div>
-        <label>Nombre</label>
-        <input type="text" id="miPerfilNombre" disabled>
+
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:4px;">
+        <div class="perfil-avatar-lg" id="miPerfilAvatarPreview">?</div>
+        <div>
+          <input type="file" id="miPerfilFotoInput" accept="image/*" style="display:none;">
+          <button type="button" class="btn-close2" id="miPerfilFotoBtn" style="font-size:11.5px;padding:6px 12px;">Cambiar foto</button>
+          <div style="font-size:10.5px;color:var(--ink-soft);margin-top:5px;">JPG o PNG. Se ajusta sola al subirla.</div>
+        </div>
+      </div>
+
+      <div class="aud-modal-row">
+        <div><label>Nombre</label><input type="text" id="miPerfilNombre" placeholder="Nombre"></div>
+        <div><label>Usuario</label><input type="text" id="miPerfilUsuario" disabled></div>
+      </div>
+      <div class="aud-modal-row">
+        <div><label>Apellido Paterno</label><input type="text" id="miPerfilApPaterno"></div>
+        <div><label>Apellido Materno</label><input type="text" id="miPerfilApMaterno"></div>
+      </div>
+      <div class="aud-modal-row">
+        <div><label>Correo electrónico</label><input type="email" id="miPerfilCorreo" placeholder="nombre@purifika.com"></div>
+        <div><label>Teléfono Móvil</label><input type="text" id="miPerfilTelefono" placeholder="Ej. (81) 1234 5678"></div>
+      </div>
+      <div class="aud-modal-row">
+        <div><label>Departamento</label><input type="text" id="miPerfilDepartamento" placeholder="Ej. Franquicias"></div>
+        <div><label>Género</label>
+          <select id="miPerfilGenero">
+            <option value="">Selecciona…</option>
+            <option>Masculino</option><option>Femenino</option><option>Otro</option><option>Prefiero no decir</option>
+          </select>
+        </div>
+      </div>
+      <div class="aud-modal-row">
+        <div><label>Día / Mes de Nacimiento</label><input type="text" id="miPerfilFechaNacimiento" placeholder="Ej. 25 de Marzo"></div>
+        <div><label>Puesto</label><input type="text" id="miPerfilPuesto" placeholder="Ej. Asesor"></div>
       </div>
       <div>
-        <label>Usuario</label>
-        <input type="text" id="miPerfilUsuario" disabled>
+        <label>Perfil</label>
+        <input type="text" id="miPerfilPerfil" placeholder="Ej. Gerente de Franquicias, Asesor de Calidad">
       </div>
-      <div>
-        <label>Mi correo</label>
-        <input type="email" id="miPerfilCorreo" placeholder="nombre@purifika.com">
-      </div>
+      <p style="margin:2px 0 0;font-size:11px;color:var(--ink-soft);">Tu correo también se usa para autocompletarte como líder de auditoría en Google Calendar.</p>
     </div>
     <div class="aud-modal-foot">
       <div style="display:flex;gap:10px;margin-left:auto;">
@@ -1136,7 +1183,6 @@
             <div class="avatar" id="sessionAvatar">?</div>
             <div class="session-menu-text">
               <span id="sessionName"></span>
-              <span class="role-tag" id="sessionRoleTag"></span>
             </div>
             <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
           </button>
@@ -1858,6 +1904,12 @@
     closeTerms_();
   });
 
+  function renderSessionAvatar_(fotoUrl, nombre){
+    const av = document.getElementById("sessionAvatar");
+    if(fotoUrl){ av.innerHTML = `<img src="${esc(fotoUrl)}" alt="Foto de perfil">`; }
+    else { av.textContent = initialsOf(nombre); }
+  }
+
   function startSession(user, token){
     session = user;
     session.token = token || ""; // token de sesión: se manda automáticamente en cada apiGet/apiPost de aquí en adelante
@@ -1865,10 +1917,8 @@
     shell.classList.add("session-active");
     const chip = document.getElementById("sessionChip");
     chip.style.display = "flex";
-    document.getElementById("sessionAvatar").textContent = initialsOf(user.nombre);
+    renderSessionAvatar_(user.fotoUrl, user.nombre);
     document.getElementById("sessionName").textContent = user.nombre;
-    const roleLabelMap = {admin:"Administrador", coordinador_sgc:"Coord. SGC", calidad:"Calidad", franquicia:"Franquicia"};
-    document.getElementById("sessionRoleTag").textContent = roleLabelMap[user.rol] || user.rol;
     document.getElementById("adminFranqSwitch").classList.toggle("show", user.rol === "admin");
     document.getElementById("navAuditLog").style.display = (user.rol === "admin" || user.rol === "coordinador_sgc") ? "" : "none";
     document.getElementById("navUsuarios").style.display = (user.rol === "admin") ? "" : "none";
@@ -1918,15 +1968,31 @@
   });
 
   /* ---------- "Mi perfil" (solo lectura) ---------- */
+  function renderPerfilAvatarInto_(elId, fotoUrl, nombre){
+    const el = document.getElementById(elId);
+    if(!el) return;
+    if(fotoUrl){ el.innerHTML = `<img src="${esc(fotoUrl)}" alt="Foto de perfil">`; }
+    else { el.textContent = initialsOf(nombre || "?"); }
+  }
   function openVerPerfil_(){
     if(!session) return;
     sessionMenuEl.classList.remove("open");
     const roleLabelMap = {admin:"Administrador", coordinador_sgc:"Coord. SGC", calidad:"Calidad", franquicia:"Franquicia"};
+    renderPerfilAvatarInto_("verPerfilAvatar", session.fotoUrl, session.nombre);
+    document.getElementById("verPerfilNombreCompleto").textContent = session.nombre || "";
+    document.getElementById("verPerfilUsuarioSub").textContent = "@" + (session.usuario || "");
     document.getElementById("verPerfilNombre").value = session.nombre || "";
-    document.getElementById("verPerfilUsuario").value = session.usuario || "";
-    document.getElementById("verPerfilRol").value = roleLabelMap[session.rol] || session.rol || "";
-    document.getElementById("verPerfilFranquicias").value = session.franquicias || "Todas";
+    document.getElementById("verPerfilApPaterno").value = session.apellidoPaterno || "—";
+    document.getElementById("verPerfilApMaterno").value = session.apellidoMaterno || "—";
     document.getElementById("verPerfilCorreo").value = session.correo || "(sin capturar)";
+    document.getElementById("verPerfilTelefono").value = session.telefono || "—";
+    document.getElementById("verPerfilDepartamento").value = session.departamento || "—";
+    document.getElementById("verPerfilFranquicias").value = session.franquicias || "Todas";
+    document.getElementById("verPerfilGenero").value = session.genero || "—";
+    document.getElementById("verPerfilFechaNacimiento").value = session.fechaNacimiento || "—";
+    document.getElementById("verPerfilPuesto").value = session.puesto || "—";
+    document.getElementById("verPerfilPerfil").value = session.perfil || (roleLabelMap[session.rol] || session.rol || "—");
+    document.getElementById("verPerfilFechaIngreso").value = session.fechaIngreso || "—";
     document.getElementById("verPerfilModal").classList.add("show");
   }
   function closeVerPerfil_(){ document.getElementById("verPerfilModal").classList.remove("show"); }
@@ -1935,14 +2001,23 @@
   document.getElementById("verPerfilCerrar").addEventListener("click", closeVerPerfil_);
   document.getElementById("verPerfilModal").addEventListener("click", (e) => { if(e.target.id === "verPerfilModal") closeVerPerfil_(); });
 
-  /* ---------- "Editar perfil" (correo) ---------- */
+  /* ---------- "Editar perfil" (autoservicio, todos los campos + foto) ---------- */
   function openMiPerfil_(){
     if(!session) return;
     sessionMenuEl.classList.remove("open");
     document.getElementById("miPerfilError").style.display = "none";
+    renderPerfilAvatarInto_("miPerfilAvatarPreview", session.fotoUrl, session.nombre);
     document.getElementById("miPerfilNombre").value = session.nombre || "";
     document.getElementById("miPerfilUsuario").value = session.usuario || "";
+    document.getElementById("miPerfilApPaterno").value = session.apellidoPaterno || "";
+    document.getElementById("miPerfilApMaterno").value = session.apellidoMaterno || "";
     document.getElementById("miPerfilCorreo").value = session.correo || "";
+    document.getElementById("miPerfilTelefono").value = session.telefono || "";
+    document.getElementById("miPerfilDepartamento").value = session.departamento || "";
+    document.getElementById("miPerfilGenero").value = session.genero || "";
+    document.getElementById("miPerfilFechaNacimiento").value = session.fechaNacimiento || "";
+    document.getElementById("miPerfilPuesto").value = session.puesto || "";
+    document.getElementById("miPerfilPerfil").value = session.perfil || "";
     document.getElementById("miPerfilModal").classList.add("show");
   }
   function closeMiPerfil_(){ document.getElementById("miPerfilModal").classList.remove("show"); }
@@ -1950,23 +2025,86 @@
   document.getElementById("miPerfilCloseX").addEventListener("click", closeMiPerfil_);
   document.getElementById("miPerfilCancel").addEventListener("click", closeMiPerfil_);
   document.getElementById("miPerfilModal").addEventListener("click", (e) => { if(e.target.id === "miPerfilModal") closeMiPerfil_(); });
-  document.getElementById("miPerfilSave").addEventListener("click", () => {
-    const correo = document.getElementById("miPerfilCorreo").value.trim();
+
+  /* ---------- Foto de perfil: redimensionar en el navegador antes de subir
+     (para no pesar la página ni la hoja) y mandarla como dataURL base64 a
+     subirFotoPerfil_, que la guarda en Drive y regresa la URL pública. ---------- */
+  document.getElementById("miPerfilFotoBtn").addEventListener("click", () => {
+    document.getElementById("miPerfilFotoInput").click();
+  });
+  document.getElementById("miPerfilFotoInput").addEventListener("change", (e) => {
+    const file = e.target.files && e.target.files[0];
+    if(!file) return;
     const errEl = document.getElementById("miPerfilError");
     errEl.style.display = "none";
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const img = new Image();
+      img.onload = () => {
+        const MAX = 320;
+        let w = img.width, h = img.height;
+        if(w > h && w > MAX){ h = Math.round(h * MAX / w); w = MAX; }
+        else if(h > MAX){ w = Math.round(w * MAX / h); h = MAX; }
+        const canvas = document.createElement("canvas");
+        canvas.width = w; canvas.height = h;
+        canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+        const dataUrl = canvas.toDataURL("image/jpeg", 0.82);
+        const preview = document.getElementById("miPerfilAvatarPreview");
+        preview.innerHTML = `<img src="${dataUrl}" alt="Vista previa">`;
+        const btn = document.getElementById("miPerfilFotoBtn");
+        const prevText = btn.textContent;
+        btn.disabled = true; btn.textContent = "Subiendo...";
+        apiPost("subirFotoPerfil", { dataUrl }).then(res => {
+          btn.disabled = false; btn.textContent = prevText;
+          if(!res || !res.ok){
+            errEl.textContent = (res && res.error) || "No se pudo subir la foto.";
+            errEl.style.display = "block";
+            return;
+          }
+          session.fotoUrl = res.url;
+          renderSessionAvatar_(res.url, session.nombre);
+          toast_("Foto de perfil actualizada.", "success");
+        }).catch(() => {
+          btn.disabled = false; btn.textContent = prevText;
+          errEl.textContent = "Error de conexión al subir la foto.";
+          errEl.style.display = "block";
+        });
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+
+  document.getElementById("miPerfilSave").addEventListener("click", () => {
+    const errEl = document.getElementById("miPerfilError");
+    errEl.style.display = "none";
+    const correo = document.getElementById("miPerfilCorreo").value.trim();
+    const payload = {
+      nombre: document.getElementById("miPerfilNombre").value.trim(),
+      apellidoPaterno: document.getElementById("miPerfilApPaterno").value.trim(),
+      apellidoMaterno: document.getElementById("miPerfilApMaterno").value.trim(),
+      correo,
+      telefono: document.getElementById("miPerfilTelefono").value.trim(),
+      departamento: document.getElementById("miPerfilDepartamento").value.trim(),
+      genero: document.getElementById("miPerfilGenero").value,
+      fechaNacimiento: document.getElementById("miPerfilFechaNacimiento").value.trim(),
+      puesto: document.getElementById("miPerfilPuesto").value.trim(),
+      perfil: document.getElementById("miPerfilPerfil").value.trim()
+    };
     const btn = document.getElementById("miPerfilSave");
     btn.disabled = true;
-    apiPost("actualizarMiCorreo", { correo }).then(res => {
+    apiPost("actualizarMiPerfil", payload).then(res => {
       btn.disabled = false;
       if(!res || !res.ok){
-        errEl.textContent = (res && res.error) || "No se pudo guardar el correo.";
+        errEl.textContent = (res && res.error) || "No se pudo guardar el perfil.";
         errEl.style.display = "block";
         return;
       }
-      session.correo = res.correo;
+      Object.assign(session, payload);
+      document.getElementById("sessionName").textContent = session.nombre;
       const u = state.usuarios.find(x => x.usuario === session.usuario);
-      if(u) u.correo = res.correo;
-      toast_("Correo guardado. Se autocompletará cuando te elijan como líder.", "success");
+      if(u) Object.assign(u, payload);
+      toast_("Perfil guardado.", "success");
       closeMiPerfil_();
     }).catch(() => {
       btn.disabled = false;
