@@ -1878,6 +1878,14 @@
   function initialsOf(name){
     return (name||"").split(" ").filter(Boolean).slice(0,2).map(w=>w[0]).join("").toUpperCase();
   }
+  // Nombre corto para mostrar en topbar/menús: nombre + primer apellido
+  // (no el nombre completo con los dos apellidos, ni solo el nombre).
+  function nombreMostrar_(u){
+    if(!u) return "";
+    const nombre = (u.nombre || "").trim();
+    const apPat = (u.apellidoPaterno || "").trim();
+    return apPat ? (nombre + " " + apPat) : nombre;
+  }
 
   /* =====================================================================
      TÉRMINOS Y CONDICIONES — gate de aceptación
@@ -1904,10 +1912,10 @@
     closeTerms_();
   });
 
-  function renderSessionAvatar_(fotoUrl, nombre){
+  function renderSessionAvatar_(fotoUrl, nombreParaIniciales){
     const av = document.getElementById("sessionAvatar");
     if(fotoUrl){ av.innerHTML = `<img src="${esc(fotoUrl)}" alt="Foto de perfil">`; }
-    else { av.textContent = initialsOf(nombre); }
+    else { av.textContent = initialsOf(nombreParaIniciales); }
   }
 
   function startSession(user, token){
@@ -1917,8 +1925,8 @@
     shell.classList.add("session-active");
     const chip = document.getElementById("sessionChip");
     chip.style.display = "flex";
-    renderSessionAvatar_(user.fotoUrl, user.nombre);
-    document.getElementById("sessionName").textContent = user.nombre;
+    renderSessionAvatar_(user.fotoUrl, nombreMostrar_(user));
+    document.getElementById("sessionName").textContent = nombreMostrar_(user);
     document.getElementById("adminFranqSwitch").classList.toggle("show", user.rol === "admin");
     document.getElementById("navAuditLog").style.display = (user.rol === "admin" || user.rol === "coordinador_sgc") ? "" : "none";
     document.getElementById("navUsuarios").style.display = (user.rol === "admin") ? "" : "none";
@@ -1978,8 +1986,8 @@
     if(!session) return;
     sessionMenuEl.classList.remove("open");
     const roleLabelMap = {admin:"Administrador", coordinador_sgc:"Coord. SGC", calidad:"Calidad", franquicia:"Franquicia"};
-    renderPerfilAvatarInto_("verPerfilAvatar", session.fotoUrl, session.nombre);
-    document.getElementById("verPerfilNombreCompleto").textContent = session.nombre || "";
+    renderPerfilAvatarInto_("verPerfilAvatar", session.fotoUrl, nombreMostrar_(session));
+    document.getElementById("verPerfilNombreCompleto").textContent = nombreMostrar_(session);
     document.getElementById("verPerfilUsuarioSub").textContent = "@" + (session.usuario || "");
     document.getElementById("verPerfilNombre").value = session.nombre || "";
     document.getElementById("verPerfilApPaterno").value = session.apellidoPaterno || "—";
@@ -2006,7 +2014,7 @@
     if(!session) return;
     sessionMenuEl.classList.remove("open");
     document.getElementById("miPerfilError").style.display = "none";
-    renderPerfilAvatarInto_("miPerfilAvatarPreview", session.fotoUrl, session.nombre);
+    renderPerfilAvatarInto_("miPerfilAvatarPreview", session.fotoUrl, nombreMostrar_(session));
     document.getElementById("miPerfilNombre").value = session.nombre || "";
     document.getElementById("miPerfilUsuario").value = session.usuario || "";
     document.getElementById("miPerfilApPaterno").value = session.apellidoPaterno || "";
@@ -2101,7 +2109,8 @@
         return;
       }
       Object.assign(session, payload);
-      document.getElementById("sessionName").textContent = session.nombre;
+      document.getElementById("sessionName").textContent = nombreMostrar_(session);
+      renderSessionAvatar_(session.fotoUrl, nombreMostrar_(session));
       const u = state.usuarios.find(x => x.usuario === session.usuario);
       if(u) Object.assign(u, payload);
       toast_("Perfil guardado.", "success");
@@ -2777,7 +2786,7 @@
       document.getElementById("audFFecha").value = presetDate || "";
       document.getElementById("audFTipo").value = "interna";
       document.getElementById("audFAlcance").value = "";
-      populateAudLiderSelect_((session && session.nombre) || "");
+      populateAudLiderSelect_((session && nombreMostrar_(session)) || "");
       document.getElementById("audFLiderEmail").value = (session && session.correo) || "";
       document.getElementById("audFEstatus").value = "Programada";
       document.getElementById("audFNotas").value = "";
